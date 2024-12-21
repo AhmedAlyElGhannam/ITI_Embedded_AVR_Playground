@@ -14,5 +14,3 @@ in a new tab, run:
 avr-gdb AVR_TRIAL.elf
 target remote localhost:1212
 ```
-## Lab 01
-1. 
