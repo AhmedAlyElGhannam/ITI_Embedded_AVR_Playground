@@ -254,7 +254,7 @@ out:
 	return ret_enumStatus;
 }
 
-MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, u8* Add_pu8PinValue)
+MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, uint8_t* Add_uint8PtrPinValue)
 {
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
 
@@ -270,7 +270,7 @@ MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDI
 		goto out;
 	}
 
-	if (Add_pu8PinValue == NULL)
+	if (Add_uint8PtrPinValue == NULL)
 	{
 		ret_enumStatus = MDIO_NULL_PTR;
 		goto out;
@@ -279,19 +279,19 @@ MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDI
 	switch (Copy_enuPortNum)
 	{
 		case MDIO_PORTA:
-			(*Add_pu8PinValue) = GET_BIT(PINA, Copy_enuPinNum);
+			(*Add_uint8PtrPinValue) = GET_BIT(PINA, Copy_enuPinNum);
 		break;
 
 		case MDIO_PORTB:
-			(*Add_pu8PinValue) = GET_BIT(PINB, Copy_enuPinNum);
+			(*Add_uint8PtrPinValue) = GET_BIT(PINB, Copy_enuPinNum);
 		break;
 
 		case MDIO_PORTC:
-			(*Add_pu8PinValue) = GET_BIT(PINC, Copy_enuPinNum);
+			(*Add_uint8PtrPinValue) = GET_BIT(PINC, Copy_enuPinNum);
 		break;
 
 		case MDIO_PORTD:
-			(*Add_pu8PinValue) = GET_BIT(PIND, Copy_enuPinNum);
+			(*Add_uint8PtrPinValue) = GET_BIT(PIND, Copy_enuPinNum);
 		break;
 	}
 
