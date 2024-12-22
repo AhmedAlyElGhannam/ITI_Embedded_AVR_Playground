@@ -82,7 +82,6 @@ out:
 	return ret_enumStatus;
 }
 
-
 MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinState_t Copy_enuPinState)
 {
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;

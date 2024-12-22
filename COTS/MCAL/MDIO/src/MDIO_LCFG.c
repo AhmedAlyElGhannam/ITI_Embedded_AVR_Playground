@@ -61,3 +61,4 @@ void MDIO_voidInit(void)
 
     return;
 }
+
