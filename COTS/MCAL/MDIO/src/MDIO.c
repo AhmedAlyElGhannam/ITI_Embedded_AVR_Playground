@@ -17,7 +17,7 @@
 // accessing pin configuration array defined in LCFG.c file
 extern MDIO_enuPinConfig_t MDIO_enuArrPinConfig[MDIO_NUM_OF_PORTS * MDIO_NUM_OF_PINS];
 
-// macros to extract port && pin numbers from iterator
+// macros to extract port && pin numbers from iterator in MDIO_voidInit function
 #define EXTRACT_PORT_NUM(ITER)      ((ITER) / MDIO_NUM_OF_PINS)
 #define EXTRACT_PIN_NUM(ITER)       ((ITER) % MDIO_NUM_OF_PINS)
 
@@ -37,7 +37,7 @@ void MDIO_voidInit(void)
     return;
 }
 
-MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinConfig_t Copy_enuPinConfigration)
+MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinConfig_t Copy_enuPinConfig)
 {
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
 
@@ -53,7 +53,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortN
 		goto out;
 	}
 
-	if (IS_INVALID_PIN_CONFIG(Copy_enuPinConfigration))
+	if (IS_INVALID_PIN_CONFIG(Copy_enuPinConfig))
 	{
 		ret_enumStatus = MDIO_INVALID_PARAM;
 		goto out;
@@ -61,16 +61,16 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortN
 
 	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 
-	if (Copy_enuPinConfigration == MDIO_PIN_OUTPUT)
+	if (Copy_enuPinConfig == MDIO_PIN_OUTPUT)
 	{
 		SET_BIT(Local_strPtrCurrPort->DDR, Copy_enuPinNum);
 	}
-	else if (Copy_enuPinConfigration == MDIO_PIN_INPUT_PULLUP)
+	else if (Copy_enuPinConfig == MDIO_PIN_INPUT_PULLUP)
 	{
 		CLR_BIT(Local_strPtrCurrPort->DDR, Copy_enuPinNum);
 		SET_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
 	}
-	else if (Copy_enuPinConfigration == MDIO_PIN_INPUT)
+	else if (Copy_enuPinConfig == MDIO_PIN_INPUT)
 	{
 		CLR_BIT(Local_strPtrCurrPort->DDR, Copy_enuPinNum);
 		CLR_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
@@ -80,7 +80,7 @@ out:
 	return ret_enumStatus;
 }
 
-MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPortConfig_t Copy_enuPortConfigration)
+MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPortConfig_t Copy_enuPortConfig)
 {
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
 
@@ -90,7 +90,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPort
 		goto out;
 	}
 
-	if (IS_INVALID_PORT_CONFIG(Copy_enuPortConfigration))
+	if (IS_INVALID_PORT_CONFIG(Copy_enuPortConfig))
 	{
 		ret_enumStatus = MDIO_INVALID_PARAM;
 		goto out;
@@ -98,7 +98,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPort
 
 	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 
-	(Local_strPtrCurrPort->DDR) = Copy_enuPortConfigration;
+	(Local_strPtrCurrPort->DDR) = Copy_enuPortConfig;
 
 out:
 	return ret_enumStatus;
