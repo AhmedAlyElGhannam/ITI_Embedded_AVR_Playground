@@ -27,6 +27,7 @@ void MDIO_voidInit(void)
     MDIO_enuPortNum_t Local_enuPortNum;
     MDIO_enuPinNum_t Local_enuPinNum;
 
+	// replace MDIO_NUM_OF_PORTS with MDIO_NUM_OF_ENABLED_PORTS 
     for (Local_uint8Iter = 0; Local_uint8Iter < (MDIO_NUM_OF_PORTS * MDIO_NUM_OF_PINS); Local_uint8Iter++)
     {
         Local_enuPortNum = EXTRACT_PORT_NUM(Local_uint8Iter);
