@@ -43,6 +43,11 @@ add_subdirectory(
     ${CMAKE_BINARY_DIR}/MDIO
 )
 
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/MPORT
+    ${CMAKE_BINARY_DIR}/MPORT
+)
+
 
 # include directories for relevant .h files (this line should be obselete)
 #include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/LIB/MCAL/MDIO/include/ ${CMAKE_CURRENT_SOURCE_DIR}/LIB/STD_LIB/include/)
@@ -52,7 +57,7 @@ set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
 
 # compiling and getting .elf file
 add_executable(${PROJECT_NAME}.elf ${AVR_PROJECT_SRC_FILES} ${AVR_PROJECT_INC_FILES}) # main target
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE MDIO)
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE MDIO MPORT)
 
 # adding a custom target/build rule for creating .hex file
 add_custom_target(flash 
