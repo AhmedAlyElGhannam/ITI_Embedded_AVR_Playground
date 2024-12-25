@@ -14,4 +14,10 @@ typedef double float64_t;
 
 #define NULL ((void*)0)
 
+typedef enum
+{
+    true = 1,
+    false = 0,
+} bool;
+
 #endif
