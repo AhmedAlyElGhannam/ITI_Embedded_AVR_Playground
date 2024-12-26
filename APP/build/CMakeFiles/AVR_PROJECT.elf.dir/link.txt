@@ -1,0 +1,1 @@
+/usr/bin/avr-gcc -mmcu=atmega32 -Wl,--gc-sections CMakeFiles/AVR_PROJECT.elf.dir/src/main.c.obj -o AVR_PROJECT.elf  MDIO/libMDIO.a MPORT/libMPORT.a

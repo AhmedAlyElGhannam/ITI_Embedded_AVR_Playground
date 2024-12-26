@@ -24,9 +24,6 @@ file(GLOB AVR_PROJECT_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 # collect all .h files
 file(GLOB AVR_PROJECT_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
 
-# setting default compiler for C && Cpp
-set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
-
 # setting compiler flags for C && Cpp
 add_compile_options(-Wall -Os -g -mmcu=${MCU})
 
@@ -36,28 +33,30 @@ add_compile_options(-Wall -Os -g -mmcu=${MCU})
 # setting linker flags
 add_link_options(-mmcu=${MCU} -Wl,--gc-sections)
 
+# create a list of required libraries
+set(MCAL_LIBS
+	MDIO
+	MPORT
+)
+
 # include subdirectories for libraries' CMakeLists.txt
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../ITI_ATMEGA32_Driver_Lib/COTS/MCAL/MDIO)
-add_subdirectory(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/MDIO
-    ${CMAKE_BINARY_DIR}/MDIO
-)
-
-add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/MPORT
-    ${CMAKE_BINARY_DIR}/MPORT
-)
+foreach(mcal_lib ${MCAL_LIBS})
+	add_subdirectory(
+		"${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/${mcal_lib}" 	# dir for lib CMakeLists
+    	"${CMAKE_BINARY_DIR}/${mcal_lib}"						# dir for the build lib
+	)
+endforeach()
 
 
-# include directories for relevant .h files (this line should be obselete)
-#include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/LIB/MCAL/MDIO/include/ ${CMAKE_CURRENT_SOURCE_DIR}/LIB/STD_LIB/include/)
+# set c compiler to avr-gcc (this is done AFTER adding subdirectories to prevent it from getting stuck while building)
+set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
 
 # setting avrdude flash flags
 set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
 
 # compiling and getting .elf file
 add_executable(${PROJECT_NAME}.elf ${AVR_PROJECT_SRC_FILES} ${AVR_PROJECT_INC_FILES}) # main target
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE MDIO MPORT)
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${MCAL_LIBS})
 
 # adding a custom target/build rule for creating .hex file
 add_custom_target(flash 
