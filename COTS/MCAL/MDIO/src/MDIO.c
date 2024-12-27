@@ -2,7 +2,6 @@
 #include "bit_math.h"
 #include "MDIO_Registers.h"
 #include "MDIO_PBCFG.h"
-#include "MDIO_LCFG.h"
 #include "MDIO.h"
 
 // macros for checking function arguments
@@ -21,7 +20,7 @@ extern MDIO_enuPinConfig_t MDIO_enuArrPinConfig[MDIO_NUM_OF_PORTS * MDIO_NUM_OF_
 #define EXTRACT_PORT_NUM(ITER)      ((ITER) / MDIO_NUM_OF_PINS)
 #define EXTRACT_PIN_NUM(ITER)       ((ITER) % MDIO_NUM_OF_PINS)
 
-void MDIO_voidInit(void)
+void MPORT_voidInit(void)
 {
     uint8_t Local_uint8Iter;
     MDIO_enuPortNum_t Local_enuPortNum;

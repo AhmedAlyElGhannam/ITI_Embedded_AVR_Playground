@@ -62,10 +62,11 @@ typedef enum
     MPORT_PIN_MODE_INPUT_PULLUP,
     MPORT_PIN_MODE_INPUT_PULLDOWN,
     MPORT_PIN_MODE_UART,
+    MPORT_PIN_MODE_NONE,
 } MPORT_enuPortPinMode_t;
 
 
-
+void MPORT_voidInit(void);
 MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortPinNum,  MPORT_enuPortPinDir_t  Copy_enuPortPinDir);
 MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum, MPORT_enuPortPinMode_t Copy_enuPortPinMode);
 

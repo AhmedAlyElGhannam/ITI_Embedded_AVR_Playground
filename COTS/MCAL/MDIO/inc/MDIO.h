@@ -69,7 +69,7 @@ typedef enum
 * @param        :  None --- But user must fill in MDIO_enuArrPinConfig array            *
 * @return       :  None                                                                 *
 ****************************************************************************************/
-void MDIO_voidInit(void);
+//void MDIO_voidInit(void);
 
 /************************* MDIO_enuSetPinConfigration ***********************************
 * @brief		:  	Set pin mode to INPUT, OUTPUT, or INPUT_PULLUP                      *

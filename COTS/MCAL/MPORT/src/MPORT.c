@@ -3,6 +3,7 @@
 #include "MDIO_Registers.h"
 #include "MPORT_PBCFG.h"
 #include "MPORT.h"
+#include "MPORT_LCFG.h"
 
 
 // defining number of pins per port
@@ -14,9 +15,39 @@
 #define IS_INVALID_PORT_PIN_DIR(X)		((((MPORT_enuPortPinDir_t)X) != MPORT_PORT_PIN_INPUT) && (((MPORT_enuPortPinDir_t)X) != MPORT_PORT_PIN_INPUT))
 #define IS_INVALID_PORT_PIN_MODE(X)		((((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_INPUT_PULLUP) && (((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_INPUT_PULLDOWN) && (((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_UART))
 
-// macros to extract port && pin numbers from iterator in MDIO_voidInit function
+// macros to extract port && pin numbers from weird format
 #define EXTRACT_PORT_NUM(PINXN)      ((PINXN) & (0xF0) >> 4)
 #define EXTRACT_PIN_NUM(PINXN)       ((PINXN) & (0x0F))
+
+// accessing pin configuration array defined in LCFG.c file
+extern MPORT_structPortPinDirAndMode_t MDIO_enuArrPinConfig[MPORT_NUM_OF_ALL_PINS];
+
+// macro to combine pin && port numbers in required format
+#define COMBINE_PORT_AND_PIN(PORTx, PINn)   ((PORTx << 4) | (PINn))
+
+// macros to extract port && pin numbers from iterator
+#define GET_PORT_NUM(ITER)      ((ITER) / 8)
+#define GET_PIN_NUM(ITER)       ((ITER) % 8)
+
+void MDIO_voidInit(void)
+{
+    uint8_t Local_uint8Iter;
+    uint8_t Local_uint8PortNum;
+    uint8_t Local_uint8PinNum;
+    uint8_t Local_uint8CombinedPortAndPinNum;
+
+	// iterate over all pins
+    for (Local_uint8Iter = 0; Local_uint8Iter < (MPORT_NUM_OF_ALL_PINS); Local_uint8Iter++)
+    {
+        Local_uint8PortNum = GET_PORT_NUM(Local_uint8Iter);
+        Local_uint8PinNum = GET_PIN_NUM(Local_uint8Iter);
+        Local_uint8CombinedPortAndPinNum = COMBINE_PORT_AND_PIN(Local_uint8PortNum, Local_uint8PinNum);
+        MPORT_enuSetPinDirection(Local_uint8CombinedPortAndPinNum, MDIO_enuArrPinConfig[Local_uint8Iter].dir);
+        MPORT_enuSetPinMode(Local_uint8CombinedPortAndPinNum, MDIO_enuArrPinConfig[Local_uint8Iter].mode);
+    }
+
+    return;
+}
 
 
 MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortPinNum,  MPORT_enuPortPinDir_t  Copy_enuPortPinDir)
@@ -100,6 +131,10 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum
 
         case MPORT_PIN_MODE_UART:
             // Nothing for now
+        break;
+
+        default:
+            Ret_enuStatus = MPORT_ERROR_UNCHANGEABLE_MODE;
         break;
     }
 

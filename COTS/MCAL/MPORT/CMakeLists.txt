@@ -26,7 +26,7 @@ include_directories(
 add_library(${PROJECT_NAME} STATIC ${MPORT_SRC_FILES} ${MPORT_INC_FILES})
 
 # in order to allow main to use .h & pbcfg.h -> make them interface
-target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 # std_lib will be public to anyone who wants to use though this MCAL lib
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../STD_LIB/inc)
