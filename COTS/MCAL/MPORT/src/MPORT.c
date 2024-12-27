@@ -29,7 +29,7 @@ extern MPORT_structPortPinDirAndMode_t MDIO_enuArrPinConfig[MPORT_NUM_OF_ALL_PIN
 #define GET_PORT_NUM(ITER)      ((ITER) / 8)
 #define GET_PIN_NUM(ITER)       ((ITER) % 8)
 
-void MDIO_voidInit(void)
+void MPORT_voidInit(void)
 {
     uint8_t Local_uint8Iter;
     uint8_t Local_uint8PortNum;
