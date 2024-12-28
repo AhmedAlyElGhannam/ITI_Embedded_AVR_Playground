@@ -8,15 +8,15 @@ project(MPORT C)
 set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
 
 # collect library source files
-file(GLOB MPORT_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 # collect library header files
-file(GLOB MPORT_LIB_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
-file(GLOB MPORT_STDLIB_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../STD_LIB/inc/*.h)
-file(GLOB MPORT_COMMON_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/inc/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_LIB_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_STDLIB_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../STD_LIB/inc/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_COMMON_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/inc/*.h)
 
 # combine all header file variables into a single variable
-set(MPORT_INC_FILES ${MPORT_LIB_INC_FILES} ${MPORT_STDLIB_INC_FILES} ${MPORT_COMMON_INC_FILES})
+set(${PROJECT_NAME}_INC_FILES "${${PROJECT_NAME}_LIB_INC_FILES}" "${${PROJECT_NAME}_STDLIB_INC_FILES}" "${${PROJECT_NAME}_COMMON_INC_FILES}")
 
 # include directory for all .h files used by this MCAL lib
 include_directories(
@@ -26,7 +26,7 @@ include_directories(
 )
 
 # create a static library
-add_library(${PROJECT_NAME} STATIC ${MPORT_SRC_FILES} ${MPORT_INC_FILES})
+add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}")
 
 # in order to allow main to use .h & pbcfg.h -> make them interface
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
