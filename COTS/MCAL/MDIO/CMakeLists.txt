@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.22)
 # project name + defining used languages
 project(MDIO C) 
 
+# setting default compiler for C
+set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
+
 # collect library source files
 file(GLOB MDIO_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
