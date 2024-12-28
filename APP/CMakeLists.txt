@@ -19,10 +19,10 @@ set(MCU2 m32)    	# for avrdude
 set(PROGRAMMER usbasp) 
 
 # collect all .c files
-file(GLOB AVR_PROJECT_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+file(GLOB ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 # collect all .h files
-file(GLOB AVR_PROJECT_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+file(GLOB ${PROJECT_NAME}_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
 
 # setting default compiler for C && Cpp
 set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
@@ -56,7 +56,7 @@ add_subdirectory(
 set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
 
 # compiling and getting .elf file
-add_executable(${PROJECT_NAME}.elf ${AVR_PROJECT_SRC_FILES} ${AVR_PROJECT_INC_FILES}) # main target
+add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}") # main target
 target_link_libraries(${PROJECT_NAME}.elf PRIVATE MDIO MPORT)
 
 # adding a custom target/build rule for creating .hex file
