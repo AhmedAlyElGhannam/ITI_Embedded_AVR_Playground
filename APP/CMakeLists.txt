@@ -4,76 +4,73 @@ cmake_minimum_required(VERSION 3.22)
 # to make sure CMake knows that the target will not be executed on this machine
 set(CMAKE_SYSTEM_NAME Generic)
 
+# setting target architecture to AVR
+set(CMAKE_SYSTEM_PROCESSOR avr)
+
 # set C && Cpp versions
 set(CMAKE_C_STANDARD 99)
 
 # project name + defining used languages 
 project(AVR_PROJECT C)
 
+# include ,cmake script for converting .elf to .hex and flashing
+include(${CMAKE_CURRENT_SOURCE_DIR}/../COTS/convert-to-hex-plus-flash.cmake)
+
 # avr mcu is ATMEGA32 clocked @16MHz
-set(MCU atmega32) 	# for compiler
-set(MCU2 m32)    	# for avrdude
+set(COMPILE_MCU_NAME atmega32) 	# for compiler
+set(FLASH_MCU_NAME m32)    	# for avrdude
 #set(FCPU 16000000UL)	# for frequency
 
 # programmer type 
 set(PROGRAMMER usbasp) 
 
+# setting avrdude flash flags
+set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
+
 # collect all .c files
-file(GLOB AVR_PROJECT_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 # collect all .h files
-file(GLOB AVR_PROJECT_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
 
-# setting default compiler for C && Cpp
-set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
+# defining a list of MCAL libraries
+set(MCAL_LIB
+	MDIO
+	MPORT	
+)
+
+# looping over all libs to build them
+foreach(mcal_lib ${MCAL_LIB})
+	add_subdirectory(
+	    "${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/${mcal_lib}"
+	    "${CMAKE_BINARY_DIR}/${mcal_lib}"
+	)
+endforeach()
+
+# setting default compiler for C in this CMake file
+set(CMAKE_C_COMPILER avr-gcc)
+
+# setting default ar (lib archiving) tool in this CMake file
+set(CMAKE_AR avr-ar)
+
+# setting default linker in this CMake file
+set(CMAKE_LINKER avr-ld)
 
 # setting compiler flags for C && Cpp
-add_compile_options(-Wall -Os -g -mmcu=${MCU})
+add_compile_options(-Wall -Os -g -mmcu=${COMPILE_MCU_NAME})
 
 ## TO DO
 # add_compiler_definitions() # to define macros
 
 # setting linker flags
-add_link_options(-mmcu=${MCU} -Wl,--gc-sections)
-
-# include subdirectories for libraries' CMakeLists.txt
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../ITI_ATMEGA32_Driver_Lib/COTS/MCAL/MDIO)
-add_subdirectory(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/MDIO
-    ${CMAKE_BINARY_DIR}/MDIO
-)
-
-add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/MPORT
-    ${CMAKE_BINARY_DIR}/MPORT
-)
-
-
-# include directories for relevant .h files (this line should be obselete)
-#include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/LIB/MCAL/MDIO/include/ ${CMAKE_CURRENT_SOURCE_DIR}/LIB/STD_LIB/include/)
-
-# setting avrdude flash flags
-set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
+add_link_options(-mmcu=${COMPILE_MCU_NAME} -Wl,--gc-sections)
 
 # compiling and getting .elf file
-add_executable(${PROJECT_NAME}.elf ${AVR_PROJECT_SRC_FILES} ${AVR_PROJECT_INC_FILES}) # main target
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE MDIO MPORT)
+add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}") # main target
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${MCAL_LIB})
 
-# adding a custom target/build rule for creating .hex file
-add_custom_target(flash 
-	ALL
-	DEPENDS ${PROJECT_NAME}.elf
-	COMMAND avr-objcopy ${FLASH_FLAGS} -O ihex ${PROJECT_NAME}.elf ${PROJECT_NAME}.hex
-	COMMENT "Generating .hex file from .elf file"
-	)
+# converting .elf into .hex and flashing it on specified mcu
+convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})
 
 # modify the clean build rule to delete the .hex file
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${PROJECT_NAME}.hex)
-
-
-# adding a custom target/build rule for burning .hex file on mcu using avrdude
-add_custom_target(burn
-	DEPENDS flash
-	COMMAND avrdude -c ${PROGRAMMER} -p ${MCU2} -U flash:w:${PROJECT_NAME}.hex:i -B 1
-    COMMENT "Burning .hex file into mcu flash"
-	)

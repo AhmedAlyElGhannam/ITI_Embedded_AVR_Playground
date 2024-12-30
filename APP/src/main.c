@@ -17,6 +17,10 @@ int main(void)
 	uint8_t Local_uint8Button1State;
 	uint8_t Local_uint8Button2State;
 	uint8_t Local_uint8Button3State;
+
+	// setting this pin to high to test changes in CMakeLists
+	MDIO_enuSetPinValue(MDIO_PORTD, MDIO_PIN7, MDIO_PIN_HIGH);
+	
 	while (true)
 	{
 		// reading button 1 state (PA0)
