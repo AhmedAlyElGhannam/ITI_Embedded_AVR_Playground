@@ -1,7 +1,9 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "std_types.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 #include "bit_math.h"
 #include "MDIO_MockReg.h"
 #include "MDIO_PBCFG.h"

@@ -1,7 +1,14 @@
 #include "test.h"
 
+
+// defining 4 pointers to reg structs instead of using actual base addresses during tests
+MDIO_strPortRegElement_t MOCK_PORTA = {0x00, 0x00, 0x00};
+MDIO_strPortRegElement_t MOCK_PORTB = {0x00, 0x00, 0x00};
+MDIO_strPortRegElement_t MOCK_PORTC = {0x00, 0x00, 0x00};
+MDIO_strPortRegElement_t MOCK_PORTD = {0x00, 0x00, 0x00};
+
 // macro to initialize all port registers to 0
-#define INITIALIZE_PORT_REGS_TO_ZEROS(PORT_BASE_ADD)    \ 
+#define INITIALIZE_PORT_REGS_TO_ZEROS(PORT_BASE_ADD)    \
                     do                                  \
                     {                                   \
                         (PORT_BASE_ADD)->DDR = 0x00;    \
@@ -106,7 +113,7 @@ void UTEST_MDIO_enuSetPinConfigration_ValidInputs(void)
     TEST_ASSERT_EQUAL(MDIO_OK, _status);
 
     // checking value in register to see if it was set correctly
-    TEST_ASSERT_EQUAL(0b00100000, GET_BIT(_portBaseAdd->DDR, _pin));
+    TEST_ASSERT_EQUAL(0x01, GET_BIT(_portBaseAdd->DDR, _pin));
 }
 
 // /* tests for MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPortConfig_t Copy_enuPortConfig) */
