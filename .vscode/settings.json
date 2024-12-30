@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mdio_registers.h": "c",
+        "mdio_mockreg.h": "c"
+    }
+}
