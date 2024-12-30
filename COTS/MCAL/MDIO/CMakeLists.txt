@@ -18,13 +18,6 @@ file(GLOB_RECURSE ${PROJECT_NAME}_COMMON_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.
 # combine all header file variables into a single variable
 set(${PROJECT_NAME}_INC_FILES "${${PROJECT_NAME}_LIB_INC_FILES}" "${${PROJECT_NAME}_STDLIB_INC_FILES}" "${${PROJECT_NAME}_COMMON_INC_FILES}")
 
-# include directory for all .h files used by this MCAL lib
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../STD_LIB/inc/
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/inc
-)
-
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}")
 
