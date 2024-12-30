@@ -1,6 +1,21 @@
-#include "std_types.h"
 #include "bit_math.h"
-#include "MDIO_Registers.h"
+// to include right reg .h file during testing
+#ifdef UNIT_TESTING_MODE	
+	// header files that are included only when in testing mode
+	#include <stdint.h>
+	#include <stddef.h>
+	#include <stdbool.h>
+	#include "MDIO_MockReg.h"
+
+	// mock base addresses for ports using extern (only in testing mode)
+	extern MDIO_strPortRegElement_t MOCK_PORTA;
+	extern MDIO_strPortRegElement_t MOCK_PORTB;
+	extern MDIO_strPortRegElement_t MOCK_PORTC;
+	extern MDIO_strPortRegElement_t MOCK_PORTD;
+#else
+	#include "std_types.h"
+	#include "MDIO_Registers.h"
+#endif
 #include "MDIO_PBCFG.h"
 #include "MDIO.h"
 
@@ -19,23 +34,6 @@ extern MDIO_enuPinConfig_t MDIO_enuArrPinConfig[MDIO_NUM_OF_PORTS * MDIO_NUM_OF_
 // macros to extract port && pin numbers from iterator in MDIO_voidInit function
 #define EXTRACT_PORT_NUM(ITER)      ((ITER) / MDIO_NUM_OF_PINS)
 #define EXTRACT_PIN_NUM(ITER)       ((ITER) % MDIO_NUM_OF_PINS)
-
-void MPORT_voidInit(void)
-{
-    uint8_t Local_uint8Iter;
-    MDIO_enuPortNum_t Local_enuPortNum;
-    MDIO_enuPinNum_t Local_enuPinNum;
-
-	// replace MDIO_NUM_OF_PORTS with MDIO_NUM_OF_ENABLED_PORTS 
-    for (Local_uint8Iter = 0; Local_uint8Iter < (MDIO_NUM_OF_PORTS * MDIO_NUM_OF_PINS); Local_uint8Iter++)
-    {
-        Local_enuPortNum = EXTRACT_PORT_NUM(Local_uint8Iter);
-        Local_enuPinNum = EXTRACT_PIN_NUM(Local_uint8Iter);
-        MDIO_enuSetPinConfigration(Local_enuPortNum, Local_enuPinNum, MDIO_enuArrPinConfig[Local_uint8Iter]);
-    }
-
-    return;
-}
 
 MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinConfig_t Copy_enuPinConfig)
 {
