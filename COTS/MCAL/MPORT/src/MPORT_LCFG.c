@@ -1,6 +1,20 @@
-#include "std_types.h"
 #include "bit_math.h"
-#include "MDIO_Registers.h"
+#ifdef UNIT_TESTING_MODE
+    // header files that are included only when in testing mode
+	#include <stdint.h>
+	#include <stddef.h>
+	#include <stdbool.h>
+	#include "MDIO_MockReg.h"
+
+	// mock base addresses for ports using extern (only in testing mode)
+	extern MDIO_strPortRegElement_t MOCK_PORTA;
+	extern MDIO_strPortRegElement_t MOCK_PORTB;
+	extern MDIO_strPortRegElement_t MOCK_PORTC;
+	extern MDIO_strPortRegElement_t MOCK_PORTD;
+#else
+    #include "std_types.h"
+    #include "MDIO_Registers.h"
+#endif
 #include "MPORT_PBCFG.h"
 #include "MPORT.h"
 #include "MPORT_LCFG.h"

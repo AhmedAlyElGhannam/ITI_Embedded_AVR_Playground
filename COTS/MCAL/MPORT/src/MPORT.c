@@ -1,6 +1,20 @@
-#include "std_types.h"
 #include "bit_math.h"
-#include "MDIO_Registers.h"
+#ifdef UNIT_TESTING_MODE
+    // header files that are included only when in testing mode
+	#include <stdint.h>
+	#include <stddef.h>
+	#include <stdbool.h>
+	#include "MDIO_MockReg.h"
+
+	// mock base addresses for ports using extern (only in testing mode)
+	extern MDIO_strPortRegElement_t MOCK_PORTA;
+	extern MDIO_strPortRegElement_t MOCK_PORTB;
+	extern MDIO_strPortRegElement_t MOCK_PORTC;
+	extern MDIO_strPortRegElement_t MOCK_PORTD;
+#else
+    #include "std_types.h"
+    #include "MDIO_Registers.h"
+#endif
 #include "MPORT_PBCFG.h"
 #include "MPORT.h"
 #include "MPORT_LCFG.h"
@@ -12,12 +26,8 @@
 // macros for checking function arguments
 #define IS_INVALID_PORT_NUM(X)			((((uint8_t)X) > 0x03) || (((uint8_t)X) < 0x00))
 #define IS_INVALID_PIN_NUM(X)			((((uint8_t)X) > 0x07) || (((uint8_t)X) < 0x00))
-#define IS_INVALID_PORT_PIN_DIR(X)		((((MPORT_enuPortPinDir_t)X) != MPORT_PORT_PIN_INPUT) && (((MPORT_enuPortPinDir_t)X) != MPORT_PORT_PIN_INPUT))
+#define IS_INVALID_PORT_PIN_DIR(X)		((((MPORT_enuPortPinDir_t)X) != MPORT_PORT_PIN_INPUT) && (((MPORT_enuPortPinDir_t)X) != MPORT_PORT_PIN_OUTPUT))
 #define IS_INVALID_PORT_PIN_MODE(X)		((((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_INPUT_PULLUP) && (((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_INPUT_PULLDOWN) && (((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_UART))
-
-// macros to extract port && pin numbers from weird format
-#define EXTRACT_PORT_NUM(PINXN)      ((PINXN) & (0xF0) >> 4)
-#define EXTRACT_PIN_NUM(PINXN)       ((PINXN) & (0x0F))
 
 // accessing pin configuration array defined in LCFG.c file
 extern MPORT_structPortPinDirAndMode_t MDIO_enuArrPinConfig[MPORT_NUM_OF_ALL_PINS];
@@ -56,8 +66,8 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortP
     MPORT_enuErrorStatus_t Ret_enuStatus = MPORT_OK;
 
     // extracting port and pin numbers
-    uint8_t Local_uint8PortNum = EXTRACT_PORT_NUM(Copy_enuPortPinNum);
-    uint8_t Local_uint8PinNum = EXTRACT_PIN_NUM(Copy_enuPortPinNum);
+    uint8_t Local_uint8PortNum = GET_HIGH_NIB(Copy_enuPortPinNum);
+    uint8_t Local_uint8PinNum = GET_LOW_NIB(Copy_enuPortPinNum);
     
     // checking passed pin dir
     if (IS_INVALID_PORT_PIN_DIR(Copy_enuPortPinDir))
@@ -98,8 +108,8 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum
     MPORT_enuErrorStatus_t Ret_enuStatus = MPORT_OK;
 
     // extracting port and pin numbers
-    uint8_t Local_uint8PortNum = EXTRACT_PORT_NUM(Copy_enuPortPinNum);
-    uint8_t Local_uint8PinNum = EXTRACT_PIN_NUM(Copy_enuPortPinNum);
+    uint8_t Local_uint8PortNum = GET_HIGH_NIB(Copy_enuPortPinNum);
+    uint8_t Local_uint8PinNum = GET_LOW_NIB(Copy_enuPortPinNum);
 
     // checking extracted pin && port nums
     if (IS_INVALID_PIN_NUM(Local_uint8PinNum) || IS_INVALID_PORT_NUM(Local_uint8PortNum))
