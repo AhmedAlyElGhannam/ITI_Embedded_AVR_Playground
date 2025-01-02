@@ -15,7 +15,8 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 # setting compiler flags for C (as written in included unity Makefile)
 add_compile_options(
-    # -std=c89    
+    # -std=c89   
+    -pg # for profiling info 
     -Wall 
     -Wextra
     -Wpointer-arith
@@ -39,3 +40,6 @@ add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}") # main target
 
 # defining include directory for all used .h files
 target_include_directories(${PROJECT_NAME}.elf PRIVATE "${${PROJECT_NAME}_INC_DIR}")
+
+# to make sure profiling info is generated
+target_link_options(${PROJECT_NAME}.elf PRIVATE -pg)
