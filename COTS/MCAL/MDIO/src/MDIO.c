@@ -1,13 +1,13 @@
 #include "bit_math.h"
-// to include right reg .h file during testing
+/* to include right reg .h file during testing */
 #ifdef UNIT_TESTING_MODE	
-	// header files that are included only when in testing mode
+	/* header files that are included only when in testing mode */
 	#include <stdint.h>
 	#include <stddef.h>
 	#include <stdbool.h>
 	#include "MDIO_MockReg.h"
 
-	// mock base addresses for ports using extern (only in testing mode)
+	/* mock base addresses for ports using extern (only in testing mode) */ 
 	extern MDIO_strPortRegElement_t MOCK_PORTA;
 	extern MDIO_strPortRegElement_t MOCK_PORTB;
 	extern MDIO_strPortRegElement_t MOCK_PORTC;
@@ -19,7 +19,7 @@
 #include "MDIO_PBCFG.h"
 #include "MDIO.h"
 
-// macros for checking function arguments
+/* macros for checking function arguments */
 #define IS_INVALID_PORT_NUM(X)			((((MDIO_enuPortNum_t)X) > MDIO_PORTD) || (((MDIO_enuPortNum_t)X) < MDIO_PORTA))
 #define IS_INVALID_PIN_NUM(X)			((((MDIO_enuPinNum_t)X) > MDIO_PIN7) || (((MDIO_enuPinNum_t)X) < MDIO_PIN0))
 #define IS_INVALID_PIN_CONFIG(X)		((((MDIO_enuPinConfig_t)X) != MDIO_PIN_OUTPUT) && (((MDIO_enuPinConfig_t)X) != MDIO_PIN_INPUT_PULLUP) && (((MDIO_enuPinConfig_t)X) != MDIO_PIN_INPUT))
@@ -28,167 +28,148 @@
 #define IS_INVALID_PORT_STATE(X)		((((MDIO_enuPortState_t)X) != MDIO_PORT_HIGH) && (((MDIO_enuPortState_t)X) != MDIO_PORT_LOW))
 #define IS_INVALID_PTR(X)				((X) == NULL)
 
-// accessing pin configuration array defined in LCFG.c file
-extern MDIO_enuPinConfig_t MDIO_enuArrPinConfig[MDIO_NUM_OF_PORTS * MDIO_NUM_OF_PINS];
+/*
+ * @brief	Set logic applied to pin to HIGH or LOW                             
+ *                                                                                       
+ * @param	Copy_enuPortNum 	-> 	MDIO_PORTA, MDIO_PORTB, MDIO_PORTC, MDIO_PORTD  
+ *			Copy_enuPinNum  	-> 	MDIO_PIN0, MDIO_PIN1, MDIO_PIN2, MDIO_PIN3		
+ *									MDIO_PIN4, MDIO_PIN5, MDIO_PIN6, MDIO_PIN7		
+ *			Copy_enuPinState	-> 	MDIO_PIN_HIGH, MDIO_PIN_LOW		
 
-// macros to extract port && pin numbers from iterator in MDIO_voidInit function
-#define EXTRACT_PORT_NUM(ITER)      ((ITER) / MDIO_NUM_OF_PINS)
-#define EXTRACT_PIN_NUM(ITER)       ((ITER) % MDIO_NUM_OF_PINS)
-
-MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinConfig_t Copy_enuPinConfig)
-{
-	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
-
-	if (IS_INVALID_PIN_NUM(Copy_enuPinNum))
-	{
-		ret_enumStatus = MDIO_INVALID_PIN;
-		goto out;
-	}
-
-	if (IS_INVALID_PORT_NUM(Copy_enuPortNum))
-	{
-		ret_enumStatus = MDIO_INVALID_PORT;
-		goto out;
-	}
-
-	if (IS_INVALID_PIN_CONFIG(Copy_enuPinConfig))
-	{
-		ret_enumStatus = MDIO_INVALID_PARAM;
-		goto out;
-	}
-
-	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
-
-	if (Copy_enuPinConfig == MDIO_PIN_OUTPUT)
-	{
-		SET_BIT(Local_strPtrCurrPort->DDR, Copy_enuPinNum);
-	}
-	else if (Copy_enuPinConfig == MDIO_PIN_INPUT_PULLUP)
-	{
-		CLR_BIT(Local_strPtrCurrPort->DDR, Copy_enuPinNum);
-		SET_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
-	}
-	else if (Copy_enuPinConfig == MDIO_PIN_INPUT)
-	{
-		CLR_BIT(Local_strPtrCurrPort->DDR, Copy_enuPinNum);
-		CLR_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
-	}
-
-out:
-	return ret_enumStatus;
-}
-
-MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPortConfig_t Copy_enuPortConfig)
-{
-	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
-
-	if (IS_INVALID_PORT_NUM(Copy_enuPortNum))
-	{
-		ret_enumStatus = MDIO_INVALID_PORT;
-		goto out;
-	}
-
-	if (IS_INVALID_PORT_CONFIG(Copy_enuPortConfig))
-	{
-		ret_enumStatus = MDIO_INVALID_PARAM;
-		goto out;
-	}
-
-	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
-
-	(Local_strPtrCurrPort->DDR) = Copy_enuPortConfig;
-
-out:
-	return ret_enumStatus;
-}
-
+ * @return  MDIO_OK, MDIO_INVALID_PARAM, MDIO_INVALID_PIN, MDIO_INVALID_PORT    
+ */
 MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinState_t Copy_enuPinState)
 {
+	/* defining a variable to store return status of function */
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
-
-	if (IS_INVALID_PIN_NUM(Copy_enuPinNum))
-	{
-		ret_enumStatus = MDIO_INVALID_PIN;
-		goto out;
-	}
 
 	if (IS_INVALID_PORT_NUM(Copy_enuPortNum))
 	{
+		/* do not continue if an invalid port number was passed */
 		ret_enumStatus = MDIO_INVALID_PORT;
 		goto out;
 	}
-
-	if (IS_INVALID_PIN_STATE(Copy_enuPinState))
+	else if (IS_INVALID_PIN_NUM(Copy_enuPinNum)) 
 	{
+		/* do not continue if an invalid pin number was passed */
+		ret_enumStatus = MDIO_INVALID_PIN;
+		goto out;
+	}
+	else if (IS_INVALID_PIN_STATE(Copy_enuPinState))
+	{	
+		/* do not continue if an invalid pin state was passed */
 		ret_enumStatus = MDIO_INVALID_PARAM;
 		goto out;
 	}
-
-	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
-
-	if (Copy_enuPinState == MDIO_PIN_HIGH)
+	else /* all arguments are valid */
 	{
-		SET_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
-	}
-	else if (Copy_enuPinState == MDIO_PIN_LOW)
-	{
-		CLR_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
+		/* get port base register based on passed port number */
+		MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
+
+		if (Copy_enuPinState == MDIO_PIN_HIGH)
+		{
+			/* set bit corresponding to pin number if state is HIGH */
+			SET_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
+		}
+		else if (Copy_enuPinState == MDIO_PIN_LOW)
+		{
+			/* clear bit corresponding to pin number if state is LOW */
+			CLR_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
+		}
+		else {} // written and left empty in compliance with MISRA C
 	}
 
-out:
+/* label at the end of function that will be jumped to once an error is detected */
+out: 
 	return ret_enumStatus;
 }
-
+             
+                                                                   
+/*
+ * @brief	Set logic applied to all of port's pins to HIGH or LOW
+ *                   
+ * @param	Copy_enuPortNum 	-> 	MDIO_PORTA, MDIO_PORTB, MDIO_PORTC, MDIO_PORTD 
+ * 			Copy_enuPortState	->	MDIO_PORT_LOW, MDIO_PORT_HIGH
+ *				
+ * @return  MDIO_OK, MDIO_INVALID_PARAM, MDIO_INVALID_PIN, MDIO_INVALID_PORT   
+ */
 MDIO_enuErrorStatus_t MDIO_enuSetPortValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPortState_t Copy_enuPortState)
 {
+	/* defining a variable to store return status of function */
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
 
+	
 	if (IS_INVALID_PORT_NUM(Copy_enuPortNum))
 	{
+		/* do not continue if an invalid port number was passed */
 		ret_enumStatus = MDIO_INVALID_PORT;
 		goto out;
 	}
-
-	if (IS_INVALID_PORT_STATE(Copy_enuPortState))
+	else if (IS_INVALID_PORT_STATE(Copy_enuPortState))
 	{
+		/* do not continue if an invalid port state was passed */
 		ret_enumStatus = MDIO_INVALID_PARAM;
 		goto out;
 	}
+	else /* all arguments are valid */
+	{
+		/* get port base register based on passed port number */
+		MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 
-	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
+		/* set all port pins by the passed value */
+		(Local_strPtrCurrPort->PORT) = Copy_enuPortState;
+	}
 
-	(Local_strPtrCurrPort->PORT) = Copy_enuPortState;
-
+/* label at the end of function that will be jumped to once an error is detected */
 out:
 	return ret_enumStatus;
 }
 
+													
+/*
+ * @brief	Reads logic state applied to a pin                             
+ *                                                                                       
+ * @param	Copy_enuPortNum 		-> 	MDIO_PORTA, MDIO_PORTB, MDIO_PORTC, MDIO_PORTD  
+ *			Copy_enuPinNum  		-> 	MDIO_PIN0, MDIO_PIN1, MDIO_PIN2, MDIO_PIN3		
+ *										MDIO_PIN4, MDIO_PIN5, MDIO_PIN6, MDIO_PIN7		
+ *			Add_uint8PtrPinValue	-> 	Ptr to return logic state				
+ *										MDIO_PIN_HIGH, MDIO_PIN_LOW		
+ *		 		
+ * @return  MDIO_OK, MDIO_INVALID_PARAM, MDIO_INVALID_PIN, MDIO_INVALID_PORT, MDIO_NULL_PTR    
+ */
 MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, uint8_t* Add_uint8PtrPinValue)
 {
+	/* defining a variable to store return status of function */
 	MDIO_enuErrorStatus_t ret_enumStatus = MDIO_OK;
-
-	if (IS_INVALID_PIN_NUM(Copy_enuPinNum))
-	{
-		ret_enumStatus = MDIO_INVALID_PIN;
-		goto out;
-	}
 
 	if (IS_INVALID_PORT_NUM(Copy_enuPortNum))
 	{
+		/* do not continue if an invalid port number was passed */
 		ret_enumStatus = MDIO_INVALID_PORT;
 		goto out;
 	}
-
-	if (IS_INVALID_PTR(Add_uint8PtrPinValue))
+	else if (IS_INVALID_PIN_NUM(Copy_enuPinNum))
 	{
+		/* do not continue if an invalid pin number was passed */
+		ret_enumStatus = MDIO_INVALID_PIN;
+		goto out;
+	}
+	else if (IS_INVALID_PTR(Add_uint8PtrPinValue))
+	{
+		/* do not continue if a null pointer was passed was passed */
 		ret_enumStatus = MDIO_NULL_PTR;
 		goto out;
 	}
+	else /* all arguments are valid */
+	{
+		/* get port base register based on passed port number */
+		MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 
-	MDIO_strPortRegElement_t* Local_strPtrCurrPort = MDIO_GET_PORT_ADD(Copy_enuPortNum);
+		/* get the value of bit corresponding to passed pin number and store it in the passed address */
+		(*Add_uint8PtrPinValue) = GET_BIT(Local_strPtrCurrPort->PIN, Copy_enuPinNum);
+	}
 
-	(*Add_uint8PtrPinValue) = GET_BIT(Local_strPtrCurrPort->PIN, Copy_enuPinNum);
-
+/* label at the end of function that will be jumped to once an error is detected */
 out:
 	return ret_enumStatus;
 }
