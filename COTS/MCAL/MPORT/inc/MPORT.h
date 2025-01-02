@@ -1,7 +1,7 @@
 #ifndef MPORT_H
 #define MPORT_H
 
-// enum for error status
+/* enum for error status */
 typedef enum 
 {
     MPORT_OK = 0, 
@@ -12,7 +12,7 @@ typedef enum
     MPORT_ERROR_UNCHANGEABLE_MODE,
 } MPORT_enuErrorStatus_t;
 
-// enum for port pins
+/* enum for port pins */
 typedef enum
 {
     MPORT_PIN_A0 = 0x00,
@@ -49,14 +49,14 @@ typedef enum
     MPORT_PIN_D7 = 0x37,
 } MPORT_enuPortPin_t;
 
-// enum for port pin directions
+/* enum for port pin directions */
 typedef enum
 {
     MPORT_PORT_PIN_INPUT = 0x00,
     MPORT_PORT_PIN_OUTPUT = 0x01,
 } MPORT_enuPortPinDir_t;
 
-// enum for port pin modes
+/* enum for port pin modes */
 typedef enum
 {
     MPORT_PIN_MODE_INPUT_PULLUP,
@@ -66,8 +66,33 @@ typedef enum
 } MPORT_enuPortPinMode_t;
 
 
+/*
+ * @brief	Initializes all pins direction and modes as specified in array defined in LCFG.c
+ *                   
+ * @param	None
+ *				
+ * @return  None   
+ */
 void MPORT_voidInit(void);
+
+/*
+ * @brief	Set pin data direction
+ *                   
+ * @param	Copy_enuPortPinNum 	-> 	MPORT_PIN_A0 to MPORT_PIN_D7 (specified in MPORT.h) 
+ * 			Copy_enuPortPinDir	->	MPORT_PORT_PIN_INPUT, MPORT_PORT_PIN_OUTPUT
+ *				
+ * @return  MPORT_OK, MPORT_ERROR_INVALID_PIN,MPORT_ERROR_INVALID_DIRECTION
+ */
 MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortPinNum,  MPORT_enuPortPinDir_t  Copy_enuPortPinDir);
+
+/*
+ * @brief	Set pin mode
+ *                   
+ * @param	Copy_enuPortPinNum 	-> 	MPORT_PIN_A0 to MPORT_PIN_D7 (specified in MPORT.h) 
+ * 			Copy_enuPortPinMode	->	MPORT_PIN_MODE_INPUT_PULLUP, MPORT_PIN_MODE_INPUT_PULLDOWN, MPORT_PIN_MODE_UART
+ *				
+ * @return  MPORT_OK, MPORT_ERROR_INVALID_PIN, MPORT_ERROR_INVALID_MODE, MPORT_ERROR_UNCHANGEABLE_MODE
+ */
 MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum, MPORT_enuPortPinMode_t Copy_enuPortPinMode);
 
 #endif 
