@@ -27,9 +27,28 @@ typedef enum
 	HLED_OFF = 0x00,
 } HLED_enuLEDValue_t;
 
+typedef enum 
+{
+    HLED_FORWARD = 0x01,
+    HLED_REVERSE = 0x00,
+} HLED_enuLEDConnection_t;
+
 typedef enum
 {
 	HLED_OK = 0x00,
-} HLED_enuLEDStatus_t;
+    HLED_INVALID_LED_NAME,
+    HLED_INVALID_LED_VALUE,
+} HLED_enuErrorStatus_t;
+
+/* always start LED name from 0x00 */
+typedef enum
+{
+    HLED_START = 0x00,
+    HLED_ALERT,
+    HLED_STOP = 0x02,
+} HLED_enuLEDName_t;
+
+void HLED_voidInit(void);
+HLED_enuErrorStatus_t HLED_uint8SetLEDValue(uint8_t Copy_uint8LEDName, HLED_enuLEDValue_t Copy_uint8LEDValue);
 
 #endif

@@ -8,28 +8,22 @@
 #else
 	#include "std_types.h"
 #endif
-#include "HLED_LCFG.h"
-#include "HLED.h"
+#include "HSWITCH_LCFG.h"
+#include "HSWITCH.h"
 
-HLED_structLEDConfig_t Global_HLED_structLEDConfigArr[NUM_OF_LEDS] =
+HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_SWITCHES] =
 {
-    [HLED_START] = 
+    [HSWITCH_RESET] = 
     {
         .portNum = PORTA,
         .pinNum = PIN0,
-        .connection = HLED_FORWARD
+        .connection = HSWITCH_EXTERNAL_PULLUP
     },
-    [HLED_STOP] = 
+    [HSWITCH_LED_CONTROL] = 
     {
         .portNum = PORTB,
         .pinNum = PIN0,
-        .connection = HLED_FORWARD
-    },
-    [HLED_ALERT] = 
-    {
-        .portNum = PORTC,
-        .pinNum = PIN0,
-        .connection = HLED_FORWARD
+        .connection = HSWITCH_INTERNAL_PULLUP
     }
 };
 
