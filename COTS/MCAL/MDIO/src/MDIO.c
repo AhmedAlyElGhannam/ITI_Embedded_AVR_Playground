@@ -32,9 +32,9 @@
  * @brief	Set logic applied to pin to HIGH or LOW                             
  *                                                                                       
  * @param	Copy_enuPortNum 	-> 	MDIO_PORTA, MDIO_PORTB, MDIO_PORTC, MDIO_PORTD  
- *			Copy_enuPinNum  	-> 	MDIO_PIN0, MDIO_PIN1, MDIO_PIN2, MDIO_PIN3		
+ * @param   Copy_enuPinNum  	-> 	MDIO_PIN0, MDIO_PIN1, MDIO_PIN2, MDIO_PIN3		
  *									MDIO_PIN4, MDIO_PIN5, MDIO_PIN6, MDIO_PIN7		
- *			Copy_enuPinState	-> 	MDIO_PIN_HIGH, MDIO_PIN_LOW		
+ * @param   Copy_enuPinState	-> 	MDIO_PIN_HIGH, MDIO_PIN_LOW		
 
  * @return  MDIO_OK, MDIO_INVALID_PARAM, MDIO_INVALID_PIN, MDIO_INVALID_PORT    
  */
