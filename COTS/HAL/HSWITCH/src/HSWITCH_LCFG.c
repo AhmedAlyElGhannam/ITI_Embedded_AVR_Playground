@@ -11,7 +11,7 @@
 #include "HSWITCH.h"
 #include "HSWITCH_LCFG.h"
 
-
+/* array that stores switch configuration and sets it at runtime */
 HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_SWITCHES] =
 {
     [HSWITCH_RESET] = 

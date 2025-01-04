@@ -25,53 +25,68 @@
 /* accessing led configuration array defined in LCFG.c file */
 extern HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_SWITCHES];
 
-/*uses MPORT*/
+
+/*
+ * @brief Initializes all switches as per the configuration defined in the array located in LCFG.c
+ *                   
+ * @param None
+ *				
+ * @return None  
+ */
 void HSWITCH_voidInit(void)
 {
+	/* defining variables for port pin && iterator */
 	uint8_t Local_uint8CurrPortPin;
 	uint8_t Local_uint8Iter;
 
 	for (Local_uint8Iter = 0; Local_uint8Iter < NUM_OF_SWITCHES; Local_uint8Iter++)
 	{
+		/* extract and combine port && pin numbers into a single value to pass to MPORT function */
 		Local_uint8CurrPortPin = (Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].portNum << 4) + (Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].pinNum);
+		
+		/* configure switch pin as input */
 		MPORT_enuSetPinDirection(Local_uint8CurrPortPin, MPORT_PORT_PIN_INPUT);
 		if (IS_CONNECTION_HSWITCH_INTERNAL_PULLUP(Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].connection))
 		{
+			/* enable input pullup if this is the switch's connection */
 			MPORT_enuSetPinMode(Local_uint8CurrPortPin, MPORT_PIN_MODE_INPUT_PULLUP);
 		}
 		else // EXTERNAL_PULLDOWN || EXTERNAL PULLUP
 		{
+			/* disable input pullup if external connection is used */
 			MPORT_enuSetPinMode(Local_uint8CurrPortPin, MPORT_PIN_MODE_INPUT_PULLDOWN);
 		}
 	}
 }
 
-/*uses MDIO*/
+
+/*
+ * @brief Reads the state of a switch and stores it in a passed address.
+ *                   
+ * @param (in) Copy_uint8SwitchName -> Switch name as defined by the user in HSWITCH_enuSwitchName_t enum
+ * 
+ * @param (out) Add_uint8PtrSwitchState -> Pointer to the address at which the state of the switch will be stored
+ *				
+ * @return HSWITCH_OK || HSWITCH_INVALID_SWITCH_NAME || HSWITCH_NULL_PTR || HSWITCH_INVALID_SWITCH_STATE
+ */
 HSWITCH_enuErrorStatus_t HSWITCH_enuGetSwitchValue(uint8_t Copy_uint8SwitchName, uint8_t* Add_uint8PtrSwitchState)
 {
+    /* defining a variable to store return address */
 	HSWITCH_enuErrorStatus_t ret_enuStatus = HSWITCH_OK;
 
 	if (IS_INVALID_SWITCH_NAME(Copy_uint8SwitchName))
 	{
+		/* do not continue if passed switch name is not valid */
 		ret_enuStatus = HSWITCH_INVALID_SWITCH_NAME;
 	}
 	else if (IS_INVALID_PTR(Add_uint8PtrSwitchState))
 	{
+		/* do not continue if passed pointer is NULL */
 		ret_enuStatus = HSWITCH_NULL_PTR;
 	}
-	else
+	else /* all arguments are valid */
 	{
-		uint8_t Local_uint8SwitchNormalState;
-		/* @TODO: change expected value for pressed based on connection */
-		// if (IS_FORWARD_CONNECTION(Copy_uint8LEDName))
-		// {
-		// 	Local_uint8LEDActualState = Copy_uint8LEDValue;
-		// }
-		// else if (IS_REVERSE_CONNECTION(Copy_uint8LEDName))
-		// {
-		// 	Local_uint8LEDActualState = !Copy_uint8LEDValue;
-		// }
-		// else {}
+		/* use MDIO's API to read the value of the pin the switch is connected to */
 		ret_enuStatus = MDIO_enuGetPinValue(
 			Global_HSWITCH_structSwitchConfigArr[Copy_uint8SwitchName].portNum,
 			Global_HSWITCH_structSwitchConfigArr[Copy_uint8SwitchName].pinNum,

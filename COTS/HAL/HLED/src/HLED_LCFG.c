@@ -11,6 +11,7 @@
 #include "HLED.h"
 #include "HLED_LCFG.h"
 
+/* array that stores LED configuration and sets it at runtime */
 HLED_structLEDConfig_t Global_HLED_structLEDConfigArr[NUM_OF_LEDS] =
 {
     [HLED_START] = 

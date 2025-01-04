@@ -82,7 +82,7 @@ void MPORT_voidInit(void)
  * @brief	Set pin data direction
  *                   
  * @param	Copy_enuPortPinNum 	-> 	MPORT_PIN_A0 to MPORT_PIN_D7 (specified in MPORT.h) 
- * 			Copy_enuPortPinDir	->	MPORT_PORT_PIN_INPUT, MPORT_PORT_PIN_OUTPUT
+ * @param   Copy_enuPortPinDir	->	MPORT_PORT_PIN_INPUT, MPORT_PORT_PIN_OUTPUT
  *				
  * @return  MPORT_OK, MPORT_ERROR_INVALID_PIN,MPORT_ERROR_INVALID_DIRECTION
  */
@@ -99,13 +99,11 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortP
     {
         /* do not continue if passed argument contained either a wrong port number or pin number */
         Ret_enuStatus = MPORT_ERROR_INVALID_PIN;
-        goto out;
     }
     else if (IS_INVALID_PORT_PIN_DIR(Copy_enuPortPinDir))
     {
         /* do not continue if passed direction is invalid */
         Ret_enuStatus = MPORT_ERROR_INVALID_DIRECTION;
-        goto out;
     }
     else /* all arguments are valid */
     {
@@ -127,7 +125,6 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortP
         }
     }
     
-out: /* label at the end of function that will be jumped to once an error is detected */
     return Ret_enuStatus;
 }
 
@@ -136,7 +133,7 @@ out: /* label at the end of function that will be jumped to once an error is det
  * @brief	Set pin mode
  *                   
  * @param	Copy_enuPortPinNum 	-> 	MPORT_PIN_A0 to MPORT_PIN_D7 (specified in MPORT.h) 
- * 			Copy_enuPortPinMode	->	MPORT_PIN_MODE_INPUT_PULLUP, MPORT_PIN_MODE_INPUT_PULLDOWN, MPORT_PIN_MODE_UART
+ * @param   Copy_enuPortPinMode	->	MPORT_PIN_MODE_INPUT_PULLUP, MPORT_PIN_MODE_INPUT_PULLDOWN, MPORT_PIN_MODE_UART
  *				
  * @return  MPORT_OK, MPORT_ERROR_INVALID_PIN, MPORT_ERROR_INVALID_MODE, MPORT_ERROR_UNCHANGEABLE_MODE
  */
@@ -153,13 +150,11 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum
     {
         /* do not continue if passed argument contained either a wrong port number or pin number */
         Ret_enuStatus = MPORT_ERROR_INVALID_PIN;
-        goto out;
     }
     else if (IS_INVALID_PORT_PIN_MODE(Copy_enuPortPinMode))
     {
         /* do not continue if passed mode is invalid */
         Ret_enuStatus = MPORT_ERROR_INVALID_MODE;
-        goto out;
     }
     else /* all arguments are valid */
     {
@@ -190,6 +185,5 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum
         }
     }
 
-out: /* label at the end of function that will be jumped to once an error is detected */
     return Ret_enuStatus;
 }

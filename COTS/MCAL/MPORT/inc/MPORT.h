@@ -79,7 +79,7 @@ void MPORT_voidInit(void);
  * @brief	Set pin data direction
  *                   
  * @param	Copy_enuPortPinNum 	-> 	MPORT_PIN_A0 to MPORT_PIN_D7 (specified in MPORT.h) 
- * 			Copy_enuPortPinDir	->	MPORT_PORT_PIN_INPUT, MPORT_PORT_PIN_OUTPUT
+ * @param   Copy_enuPortPinDir	->	MPORT_PORT_PIN_INPUT, MPORT_PORT_PIN_OUTPUT
  *				
  * @return  MPORT_OK, MPORT_ERROR_INVALID_PIN,MPORT_ERROR_INVALID_DIRECTION
  */
@@ -89,7 +89,7 @@ MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortP
  * @brief	Set pin mode
  *                   
  * @param	Copy_enuPortPinNum 	-> 	MPORT_PIN_A0 to MPORT_PIN_D7 (specified in MPORT.h) 
- * 			Copy_enuPortPinMode	->	MPORT_PIN_MODE_INPUT_PULLUP, MPORT_PIN_MODE_INPUT_PULLDOWN, MPORT_PIN_MODE_UART
+ * @param   Copy_enuPortPinMode	->	MPORT_PIN_MODE_INPUT_PULLUP, MPORT_PIN_MODE_INPUT_PULLDOWN, MPORT_PIN_MODE_UART
  *				
  * @return  MPORT_OK, MPORT_ERROR_INVALID_PIN, MPORT_ERROR_INVALID_MODE, MPORT_ERROR_UNCHANGEABLE_MODE
  */
