@@ -51,12 +51,10 @@ HSWITCH_enuErrorStatus_t HSWITCH_enuGetSwitchValue(uint8_t Copy_uint8SwitchName,
 	if (IS_INVALID_SWITCH_NAME(Copy_uint8SwitchName))
 	{
 		ret_enuStatus = HSWITCH_INVALID_SWITCH_NAME;
-		goto out;
 	}
 	else if (IS_INVALID_PTR(Add_uint8PtrSwitchState))
 	{
 		ret_enuStatus = HSWITCH_NULL_PTR;
-		goto out;
 	}
 	else
 	{
@@ -78,6 +76,5 @@ HSWITCH_enuErrorStatus_t HSWITCH_enuGetSwitchValue(uint8_t Copy_uint8SwitchName,
 		);
 	}
 
-out:
 	return ret_enuStatus;
 }

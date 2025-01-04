@@ -12,8 +12,8 @@
 #include "MPORT_LCFG.h"
 #include "MDIO.h"
 #include "MPORT.h"
-#include "HLED_LCFG.h"
 #include "HLED.h"
+#include "HLED_LCFG.h"
 
 
 /* macros for checking function arguments */
@@ -44,21 +44,19 @@ HLED_enuErrorStatus_t HLED_uint8SetLEDValue(uint8_t Copy_uint8LEDName, HLED_enuL
 	if (IS_INVALID_LED_NAME(Copy_uint8LEDName))
 	{
 		ret_enuStatus = HLED_INVALID_LED_NAME;
-		goto out;
 	}
 	else if (IS_INVALID_LED_VALUE(Copy_uint8LEDValue))
 	{
 		ret_enuStatus = HLED_INVALID_LED_VALUE;
-		goto out;
 	}
 	else
 	{
 		uint8_t Local_uint8LEDActualState = Copy_uint8LEDValue;
-		if (IS_FORWARD_CONNECTION(Copy_uint8LEDName))
+		if ((Global_HLED_structLEDConfigArr[Copy_uint8LEDName].connection) == HLED_FORWARD)
 		{
 			Local_uint8LEDActualState = Copy_uint8LEDValue;
 		}
-		else if (IS_REVERSE_CONNECTION(Copy_uint8LEDName))
+		else if ((Global_HLED_structLEDConfigArr[Copy_uint8LEDName].connection) == HLED_REVERSE)
 		{
 			Local_uint8LEDActualState = !Copy_uint8LEDValue;
 		}
@@ -71,6 +69,5 @@ HLED_enuErrorStatus_t HLED_uint8SetLEDValue(uint8_t Copy_uint8LEDName, HLED_enuL
 		);
 	}
 
-out:
 	return ret_enuStatus;
 }

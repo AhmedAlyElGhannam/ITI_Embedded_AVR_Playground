@@ -31,19 +31,18 @@ set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 # collect all .h files
-file(GLOB_RECURSE ${PROJECT_NAME}_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
+# file(GLOB_RECURSE ${PROJECT_NAME}_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
 
-# defining a list of MCAL libraries
-set(MCAL_LIB
-	MDIO
-	MPORT	
+# defining a list of HAL libraries
+set(HAL_LIB
+	HLED
 )
 
 # looping over all libs to build them
-foreach(mcal_lib ${MCAL_LIB})
+foreach(hal_lib ${HAL_LIB})
 	add_subdirectory(
-	    "${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/${mcal_lib}"
-	    "${CMAKE_BINARY_DIR}/${mcal_lib}"
+	    "${CMAKE_CURRENT_SOURCE_DIR}/../COTS/HAL/${hal_lib}"
+	    "${CMAKE_BINARY_DIR}/${hal_lib}"
 	)
 endforeach()
 
@@ -66,8 +65,8 @@ add_compile_options(-Wall -Os -g -mmcu=${COMPILE_MCU_NAME})
 add_link_options(-mmcu=${COMPILE_MCU_NAME} -Wl,--gc-sections)
 
 # compiling and getting .elf file
-add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}") # main target
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${MCAL_LIB})
+add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}") # main target
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${HAL_LIB})
 
 # converting .elf into .hex and flashing it on specified mcu
 convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})

@@ -8,8 +8,8 @@
 #else
 	#include "std_types.h"
 #endif
-#include "HLED_LCFG.h"
 #include "HLED.h"
+#include "HLED_LCFG.h"
 
 HLED_structLEDConfig_t Global_HLED_structLEDConfigArr[NUM_OF_LEDS] =
 {
