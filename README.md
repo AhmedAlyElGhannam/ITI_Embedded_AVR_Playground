@@ -2,7 +2,7 @@
 
 ## Compiling, Building, and Flashing
 ```bash
-cmake -S . -B build -DCMAKE_C_COMPILER=/usr/bin/avr-gcc
+cmake -S . -B build
 cmake --build build
 cd build
 make flash
