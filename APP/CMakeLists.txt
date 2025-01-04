@@ -33,12 +33,27 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 # collect all .h files
 # file(GLOB_RECURSE ${PROJECT_NAME}_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
 
-# defining a list of HAL libraries
-set(HAL_LIB
-	HLED
+# defining a list of MCAL libraries that will be used to build HAL libraries
+set(MCAL_LIB
+	MDIO
+	MPORT	
 )
 
 # looping over all libs to build them
+foreach(mcal_lib ${MCAL_LIB})
+	add_subdirectory(
+	    "${CMAKE_CURRENT_SOURCE_DIR}/../COTS/MCAL/${mcal_lib}/"
+	    "${CMAKE_BINARY_DIR}/${mcal_lib}/"
+	)
+endforeach()
+
+# defining a list of HAL libraries that app depends on
+set(HAL_LIB
+	HLED
+	HSWITCH
+)
+
+# looping over all HAL libs to build them
 foreach(hal_lib ${HAL_LIB})
 	add_subdirectory(
 	    "${CMAKE_CURRENT_SOURCE_DIR}/../COTS/HAL/${hal_lib}"

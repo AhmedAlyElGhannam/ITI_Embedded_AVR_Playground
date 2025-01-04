@@ -13,14 +13,6 @@ set(MCAL_LIB
 	MPORT	
 )
 
-# looping over all libs to build them
-foreach(mcal_lib ${MCAL_LIB})
-	add_subdirectory(
-	    "${CMAKE_CURRENT_SOURCE_DIR}/../../MCAL/${mcal_lib}/"
-	    "${CMAKE_BINARY_DIR}/${mcal_lib}/"
-	)
-endforeach()
-
 # setting default compiler for C
 set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
 

@@ -1,13 +1,15 @@
 #ifndef HLED_H
 #define HLED_H
 
+#ifndef HAL_PORT_AND_PIN_NAMES
+#define HAL_PORT_AND_PIN_NAMES
 typedef enum
 {
     PORTA = 0x00,
     PORTB,
     PORTC,
     PORTD = 0x03,
-} HLED_enuPortName_t;
+} HAL_enuPortName_t;
 
 typedef enum
 {
@@ -19,7 +21,8 @@ typedef enum
     PIN5,
     PIN6,
     PIN7 = 0x07,
-} HLED_enuPinName_t;
+} HAL_enuPinName_t;
+#endif
 
 typedef enum 
 {

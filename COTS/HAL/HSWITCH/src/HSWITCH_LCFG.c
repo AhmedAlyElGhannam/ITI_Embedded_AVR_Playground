@@ -8,21 +8,22 @@
 #else
 	#include "std_types.h"
 #endif
-#include "HSWITCH_LCFG.h"
 #include "HSWITCH.h"
+#include "HSWITCH_LCFG.h"
+
 
 HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_SWITCHES] =
 {
     [HSWITCH_RESET] = 
     {
         .portNum = PORTA,
-        .pinNum = PIN0,
+        .pinNum = PIN1,
         .connection = HSWITCH_EXTERNAL_PULLUP
     },
     [HSWITCH_LED_CONTROL] = 
     {
         .portNum = PORTB,
-        .pinNum = PIN0,
+        .pinNum = PIN1,
         .connection = HSWITCH_INTERNAL_PULLUP
     }
 };

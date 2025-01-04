@@ -12,8 +12,8 @@
 #include "MPORT_LCFG.h"
 #include "MDIO.h"
 #include "MPORT.h"
-#include "HSWITCH_LCFG.h"
 #include "HSWITCH.h"
+#include "HSWITCH_LCFG.h"
 
 
 /* macros for checking function arguments */
@@ -26,7 +26,7 @@
 extern HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_SWITCHES];
 
 /*uses MPORT*/
-void HLED_voidInit(void)
+void HSWITCH_voidInit(void)
 {
 	uint8_t Local_uint8CurrPortPin;
 	uint8_t Local_uint8Iter;
@@ -39,7 +39,10 @@ void HLED_voidInit(void)
 		{
 			MPORT_enuSetPinMode(Local_uint8CurrPortPin, MPORT_PIN_MODE_INPUT_PULLUP);
 		}
-		else {}
+		else // EXTERNAL_PULLDOWN || EXTERNAL PULLUP
+		{
+			MPORT_enuSetPinMode(Local_uint8CurrPortPin, MPORT_PIN_MODE_INPUT_PULLDOWN);
+		}
 	}
 }
 
