@@ -122,9 +122,9 @@ MDIO_enuErrorStatus_t MDIO_enuSetPortValue(MDIO_enuPortNum_t Copy_enuPortNum, MD
  *                                                                                       
  * @param (in) Copy_enuPortNum -> 	MDIO_PORTA, MDIO_PORTB, MDIO_PORTC, MDIO_PORTD  
  * @param (in) Copy_enuPinNum -> 	MDIO_PIN0, MDIO_PIN1, MDIO_PIN2, MDIO_PIN3		
- *										MDIO_PIN4, MDIO_PIN5, MDIO_PIN6, MDIO_PIN7		
+ *									MDIO_PIN4, MDIO_PIN5, MDIO_PIN6, MDIO_PIN7		
  * @param (out) Add_uint8PtrPinValue -> 	Ptr to return logic state				
- *										MDIO_PIN_HIGH, MDIO_PIN_LOW		
+ *											MDIO_PIN_HIGH, MDIO_PIN_LOW		
  *		 		
  * @return  MDIO_OK, MDIO_INVALID_PARAM, MDIO_INVALID_PIN, MDIO_INVALID_PORT, MDIO_NULL_PTR    
  */
