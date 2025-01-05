@@ -25,56 +25,51 @@ typedef enum
 } HAL_enuPinName_t;
 #endif
 
-/* enum for LED value */
-typedef enum 
-{
-	HLED_ON = 0x01,
-	HLED_OFF = 0x00,
-} HLED_enuLEDValue_t;
-
-/* enum for LED connection */
-typedef enum 
-{
-    HLED_FORWARD = 0x01,
-    HLED_REVERSE = 0x00,
-} HLED_enuLEDConnection_t;
-
-/* enum for LED error status */
+/* enum to define 7 segment pin names (to make connection more clear) */
 typedef enum
 {
-	HLED_OK = 0x00,
-    HLED_INVALID_LED_NAME,
-    HLED_INVALID_LED_VALUE,
-} HLED_enuErrorStatus_t;
+    H7SEGMENT_PIN_a = 0x00,
+    H7SEGMENT_PIN_b,
+    H7SEGMENT_PIN_c,
+    H7SEGMENT_PIN_d,
+    H7SEGMENT_PIN_e,
+    H7SEGMENT_PIN_f,
+    H7SEGMENT_PIN_g,
+    H7SEGMENT_PIN_dot = 0x07,
+} H7SEGMENT_enu7SegmentPinNames_t;
 
-/* enum for defined LED names [DEFINED BY USER] */
-/* always start LED name from 0x00 */
 typedef enum
 {
-    HLED_START = 0x00,
-    HLED_ALERT,
-    HLED_STOP = 0x02,
-} HLED_enuLEDName_t;
+	H7SEGMENT_ZERO = 0x3F,
+	H7SEGMENT_ONE = 0x06,
+	H7SEGMENT_TWO = 0x5B,
+	H7SEGMENT_THREE = 0x4F,
+	H7SEGMENT_FOUR = 0x66,
+	H7SEGMENT_FIVE = 0x6D,
+	H7SEGMENT_SIX = 0x7D,
+	H7SEGMENT_SEVEN = 0x07,
+	H7SEGMENT_EIGHT = 0x7F,
+	H7SEGMENT_NINE = 0x6F,
+    H7SEGMENT_DOT = 0x80,
+} H7SEGMENT_enu7SegmentNumberValues_t;
+
+typedef enum
+{
+    H7SEGMENT_COMMON_ANODE,
+    H7SEGMENT_COMMON_CATHODE,
+} H7SEGMENT_enu7SegmentConnection_t;
+
+typedef enum
+{
+    H7SEGMENT_OK,
+    H7SEGMENT_LIMIT_ERROR,
+} H7SEGMENT_enuErrorStatus_t;
+
+typedef enum
+{
+    H7SEGMENT_COUNTER = 0x00,
+} H7SEGMENT_enu7SegNames_t;
 
 
-/*
- * @brief	Initializes all LEDs as per the configuration defined in the array located in LCFG.c
- *                   
- * @param	None
- *				
- * @return  None   
- */
-void HLED_voidInit(void);
-
-/*
- * @brief	Sets LED value to ON or OFF
- *                   
- * @param (in) Copy_uint8LEDName -> LED name as defined by the user in HLED_enuLEDName_t enum
- * 
- * @param (in) Copy_uint8LEDValue -> HLED_ON || HLED_OFF
- *				
- * @return  HLED_OK || HLED_INVALID_LED_NAME || HLED_INVALID_LED_VALUE   
- */
-HLED_enuErrorStatus_t HLED_uint8SetLEDValue(uint8_t Copy_uint8LEDName, HLED_enuLEDValue_t Copy_uint8LEDValue);
 
 #endif

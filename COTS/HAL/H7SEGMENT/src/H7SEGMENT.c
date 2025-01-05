@@ -12,8 +12,8 @@
 #include "MPORT_LCFG.h"
 #include "MDIO.h"
 #include "MPORT.h"
-#include "HLED.h"
-#include "HLED_LCFG.h"
+#include "H7SEGMENT.h"
+#include "H7SEGMENT_LCFG.h"
 
 
 /* macros for checking function arguments */

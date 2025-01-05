@@ -8,29 +8,26 @@
 #else
 	#include "std_types.h"
 #endif
-#include "HLED.h"
-#include "HLED_LCFG.h"
+#include "H7SEGMENT.h"
+#include "H7SEGMENT_LCFG.h"
 
 /* array that stores LED configuration and sets it at runtime */
-HLED_structLEDConfig_t Global_HLED_structLEDConfigArr[NUM_OF_LEDS] =
+H7SEGMENT_struct7SegmentConfig_t Global_HLED_structSwitchConfigArr[NUM_OF_7SEG] =
 {
-    [HLED_START] = 
+    [H7SEGMENT_COUNTER] = 
     {
         .portNum = PORTA,
-        .pinNum = PIN0,
-        .connection = HLED_FORWARD
-    },
-    [HLED_STOP] = 
-    {
-        .portNum = PORTB,
-        .pinNum = PIN0,
-        .connection = HLED_FORWARD
-    },
-    [HLED_ALERT] = 
-    {
-        .portNum = PORTC,
-        .pinNum = PIN0,
+        .pinsConnection = 
+        {
+            [H7SEGMENT_PIN_a] = PIN0,
+            [H7SEGMENT_PIN_b] = PIN1,
+            [H7SEGMENT_PIN_c] = PIN2,
+            [H7SEGMENT_PIN_d] = PIN3,
+            [H7SEGMENT_PIN_e] = PIN4,
+            [H7SEGMENT_PIN_f] = PIN5,
+            [H7SEGMENT_PIN_g] = PIN6,
+            [H7SEGMENT_PIN_dot] = PIN7
+        },
         .connection = HLED_FORWARD
     }
 };
-

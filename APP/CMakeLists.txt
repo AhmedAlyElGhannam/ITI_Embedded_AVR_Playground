@@ -51,6 +51,7 @@ endforeach()
 set(HAL_LIB
 	HLED
 	HSWITCH
+	H7SEGMENT
 )
 
 # looping over all HAL libs to build them
