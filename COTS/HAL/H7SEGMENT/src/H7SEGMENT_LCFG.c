@@ -19,14 +19,14 @@ H7SEGMENT_struct7SegmentConfig_t Global_H7SEGMENT_struct7SegmentConfigArr[NUM_OF
         .portNum = PORTA,
         .pinsConnection = 
         {
-            [H7SEGMENT_PIN_a] = PIN1,
-            [H7SEGMENT_PIN_b] = PIN2,
-            [H7SEGMENT_PIN_c] = PIN3,
-            [H7SEGMENT_PIN_d] = PIN4,
-            [H7SEGMENT_PIN_e] = PIN5,
-            [H7SEGMENT_PIN_f] = PIN6,
-            [H7SEGMENT_PIN_g] = PIN7,
-            [H7SEGMENT_PIN_dot] = PIN0
+            [H7SEGMENT_PIN_a] = PIN0,
+            [H7SEGMENT_PIN_b] = PIN1,
+            [H7SEGMENT_PIN_c] = PIN2,
+            [H7SEGMENT_PIN_d] = PIN3,
+            [H7SEGMENT_PIN_e] = PIN4,
+            [H7SEGMENT_PIN_f] = PIN5,
+            [H7SEGMENT_PIN_g] = PIN6,
+            [H7SEGMENT_PIN_dot] = PIN7
         },
         .connection = H7SEGMENT_COMMON_CATHODE
     },
@@ -35,14 +35,14 @@ H7SEGMENT_struct7SegmentConfig_t Global_H7SEGMENT_struct7SegmentConfigArr[NUM_OF
         .portNum = PORTB,
         .pinsConnection = 
         {
-            [H7SEGMENT_PIN_a] = PIN1,
-            [H7SEGMENT_PIN_b] = PIN2,
-            [H7SEGMENT_PIN_c] = PIN3,
-            [H7SEGMENT_PIN_d] = PIN4,
-            [H7SEGMENT_PIN_e] = PIN5,
-            [H7SEGMENT_PIN_f] = PIN6,
-            [H7SEGMENT_PIN_g] = PIN7,
-            [H7SEGMENT_PIN_dot] = PIN0
+            [H7SEGMENT_PIN_a] = PIN0,
+            [H7SEGMENT_PIN_b] = PIN1,
+            [H7SEGMENT_PIN_c] = PIN2,
+            [H7SEGMENT_PIN_d] = PIN3,
+            [H7SEGMENT_PIN_e] = PIN4,
+            [H7SEGMENT_PIN_f] = PIN5,
+            [H7SEGMENT_PIN_g] = PIN6,
+            [H7SEGMENT_PIN_dot] = PIN7
         },
         .connection = H7SEGMENT_COMMON_CATHODE
     }

@@ -30,11 +30,20 @@
 							do 						\
 							{						\
   								(X) /= 10;			\
-  								++(COUNT);			\
+  								(COUNT)++;			\
   							} while ((X) != 0)		
+
+#define MAX_DISPLAYABLE_NUM_ON_7SEG(X)				\
+							do						\
+							{						\
+													\
+							} while()						\
 
 /* macro to define the number of displayable values */
 #define H7SEGMENT_NUM_OF_DISPLAYABLE_VALS	10
+
+/* macro to define the max number of digits displayable by 4 * 7 segment displays */
+#define H7SEGMENT_MAX_NUM_OF_DIGITS			4
 
 /* accessing led configuration array defined in LCFG.c file */
 extern H7SEGMENT_struct7SegmentConfig_t Global_H7SEGMENT_struct7SegmentConfigArr[NUM_OF_7SEG];
@@ -194,14 +203,17 @@ H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteMultiDigitValue(uint32_t Copy_uint3
 	/* defining a temporary variable to hold the passed value */
 	uint32_t Local_uint32TempMultiDigitValue = Copy_uint32MultiDigitValue;
 
-	/* defining variable to store digit count of passed value */
+	/* defining a variable to store digit count of passed value */
 	uint8_t Local_uint8ValueDigitCount = 0;
+
+	/* defining a temporary variable to hold digit count */
+	uint8_t Local_uint8TempValueDigitCount = 0;
+
+	/* defining an array to store the separate digits (max 5 for uint16) */
+	uint8_t Local_uint8ArrSeparateValueDigits[H7SEGMENT_MAX_NUM_OF_DIGITS] = {0};
 
 	/* counting the number of digits in the passed value */
 	COUNT_NUM_OF_DIGITS_IN_VAL(Local_uint32TempMultiDigitValue, Local_uint8ValueDigitCount);
-
-	/* defining an array to store the separate digits (max 5 for uint32) */
-	uint8_t Local_uint8ArrSeparateValueDigits[5] = {0};
 
 	/* digit count must not exceed the number of connected 7 segments */
 	if (IS_CONNECTED_7SEG_COUNT_LESS_THAN_NUM_OF_DIGITS(Local_uint8ValueDigitCount))
@@ -211,24 +223,44 @@ H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteMultiDigitValue(uint32_t Copy_uint3
 	}
 	else /* argument is valid */
 	{
-		/* counting the number of digits in the passed value && extracting each digit */
+		Local_uint8TempValueDigitCount = 0;
+
+		/* extracting each digit in the passed value */
 		while (Copy_uint32MultiDigitValue != 0)
 		{
 			/* extracting the first digit of passed value and storing it in arr */
-			Local_uint8ArrSeparateValueDigits[Local_uint8ValueDigitCount] = Copy_uint32MultiDigitValue % 10;
+			Local_uint8ArrSeparateValueDigits[Local_uint8TempValueDigitCount++] = Copy_uint32MultiDigitValue % 10;
 
 			/* deleting the extracted digit from the value */
 			Copy_uint32MultiDigitValue /= 10;
 		}
 
 		/* displaying passed value's digits on appropriate count of 7 segments */
-		for (Local_uint8Iter = 0; Local_uint8Iter < NUM_OF_7SEG; Local_uint8Iter++)
+		for (Local_uint8Iter = 0; Local_uint8Iter < Local_uint8ValueDigitCount; Local_uint8Iter++)
 		{
 			/* call H7SEGMENT_enuWriteDigit and pass the digit + the 7 segment display name that will display it */
 			ret_enuStatus = H7SEGMENT_enuWriteDigit(
 				Local_uint8Iter,
 				Local_uint8ArrSeparateValueDigits[Local_uint8Iter]
 			);
+
+			/* do not continue if H7SEGMENT_enuWriteDigit returns an error */
+			if (ret_enuStatus != H7SEGMENT_OK)
+			{
+				break;
+			}
+			else {}
+		}
+
+		/* setting other unused 7 segment values to zeros */
+		while (Local_uint8Iter < NUM_OF_7SEG)
+		{
+			ret_enuStatus = H7SEGMENT_enuWriteDigit(
+				Local_uint8Iter,
+				0x00
+			);
+
+			Local_uint8Iter++;
 		}
 	}
 
