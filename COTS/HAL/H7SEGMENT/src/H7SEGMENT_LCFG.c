@@ -12,7 +12,7 @@
 #include "H7SEGMENT_LCFG.h"
 
 /* array that stores LED configuration and sets it at runtime */
-H7SEGMENT_struct7SegmentConfig_t Global_HLED_structSwitchConfigArr[NUM_OF_7SEG] =
+H7SEGMENT_struct7SegmentConfig_t Global_H7SEGMENT_struct7SegmentConfigArr[NUM_OF_7SEG] =
 {
     [H7SEGMENT_COUNTER] = 
     {
@@ -28,6 +28,6 @@ H7SEGMENT_struct7SegmentConfig_t Global_HLED_structSwitchConfigArr[NUM_OF_7SEG] 
             [H7SEGMENT_PIN_g] = PIN6,
             [H7SEGMENT_PIN_dot] = PIN7
         },
-        .connection = HLED_FORWARD
+        .connection = H7SEGMENT_COMMON_CATHODE
     }
 };

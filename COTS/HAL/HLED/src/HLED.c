@@ -34,13 +34,13 @@ extern HLED_structLEDConfig_t Global_HLED_structLEDConfigArr[NUM_OF_LEDS];
 void HLED_voidInit(void)
 {
 	/* defining variables for port pin && iterator */
-	uint8_t Local_uint8CurrPortPin;
+	uint8_t Local_uint8CurrPortPin = 0x00;
 	uint8_t Local_uint8Iter;
 
 	for (Local_uint8Iter = 0; Local_uint8Iter < NUM_OF_LEDS; Local_uint8Iter++)
 	{
 		/* extract and combine port && pin numbers into a single value to pass to MPORT function */
-		Local_uint8CurrPortPin = (Global_HLED_structLEDConfigArr[Local_uint8Iter].portNum << 4) + (Global_HLED_structLEDConfigArr[Local_uint8Iter].pinNum);
+		Local_uint8CurrPortPin = SET_HIGH_NIB_TO_VAL(Local_uint8CurrPortPin, Global_HLED_structLEDConfigArr[Local_uint8Iter].portNum) + SET_LOW_NIB_TO_VAL(Local_uint8CurrPortPin, Global_HLED_structLEDConfigArr[Local_uint8Iter].pinNum);
 
 		/* configure LED pin as output */
 		MPORT_enuSetPinDirection(Local_uint8CurrPortPin, MPORT_PORT_PIN_OUTPUT);

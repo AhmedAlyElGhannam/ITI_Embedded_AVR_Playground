@@ -62,7 +62,10 @@ typedef enum
 typedef enum
 {
     H7SEGMENT_OK,
+    H7SEGMENT_INVALID_7SEG_NAME,
     H7SEGMENT_LIMIT_ERROR,
+    H7SEGMENT_INVALID_DIGIT,
+    H7SEGMENT_NOK,
 } H7SEGMENT_enuErrorStatus_t;
 
 typedef enum

@@ -24,8 +24,8 @@
 #define SHIFT_BYTE_LEFT(X, STEP)    ((X) <<= (STEP))
 
 #define CSHIFT_BYTE_RIGHT(X, STEP) \
-    ((X) = (((X) >> (STEP)) | ((X) << (8 - (STEP)))) & 0xFF))
+    ((X) = (((X) >> (STEP)) | ((X) << (8 - (STEP)))) & 0xFF)
 #define CSHIFT_BYTE_LEFT(X, STEP) \
-    ((X) = (((X) << (STEP)) | ((X) >> (8 - (STEP)))) & 0xFF))
+    ((X) = (((X) << (STEP)) | ((X) >> (8 - (STEP)))) & 0xFF)
 
 #endif

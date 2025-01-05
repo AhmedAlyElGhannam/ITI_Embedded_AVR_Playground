@@ -30,9 +30,6 @@ set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
 # collect all .c files
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
-# collect all .h files
-# file(GLOB_RECURSE ${PROJECT_NAME}_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
-
 # defining a list of MCAL libraries that will be used to build HAL libraries
 set(MCAL_LIB
 	MDIO
@@ -51,7 +48,7 @@ endforeach()
 set(HAL_LIB
 	HLED
 	HSWITCH
-	H7SEGMENT
+	#H7SEGMENT
 )
 
 # looping over all HAL libs to build them
@@ -84,7 +81,7 @@ add_link_options(-mmcu=${COMPILE_MCU_NAME} -Wl,--gc-sections)
 add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}") # main target
 target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${HAL_LIB})
 
-# converting .elf into .hex and flashing it on specified mcu
+# calling macro for converting .elf into .hex and flashing it on specified mcu
 convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})
 
 # modify the clean build rule to delete the .hex file

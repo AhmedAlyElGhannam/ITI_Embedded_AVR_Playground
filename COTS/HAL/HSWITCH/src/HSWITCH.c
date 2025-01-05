@@ -36,13 +36,13 @@ extern HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_
 void HSWITCH_voidInit(void)
 {
 	/* defining variables for port pin && iterator */
-	uint8_t Local_uint8CurrPortPin;
+	uint8_t Local_uint8CurrPortPin = 0x00;
 	uint8_t Local_uint8Iter;
 
 	for (Local_uint8Iter = 0; Local_uint8Iter < NUM_OF_SWITCHES; Local_uint8Iter++)
 	{
 		/* extract and combine port && pin numbers into a single value to pass to MPORT function */
-		Local_uint8CurrPortPin = (Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].portNum << 4) + (Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].pinNum);
+		Local_uint8CurrPortPin = SET_HIGH_NIB_TO_VAL(Local_uint8CurrPortPin, Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].portNum) + SET_LOW_NIB_TO_VAL(Local_uint8CurrPortPin, Global_HSWITCH_structSwitchConfigArr[Local_uint8Iter].pinNum);		
 		
 		/* configure switch pin as input */
 		MPORT_enuSetPinDirection(Local_uint8CurrPortPin, MPORT_PORT_PIN_INPUT);
@@ -51,7 +51,7 @@ void HSWITCH_voidInit(void)
 			/* enable input pullup if this is the switch's connection */
 			MPORT_enuSetPinMode(Local_uint8CurrPortPin, MPORT_PIN_MODE_INPUT_PULLUP);
 		}
-		else // EXTERNAL_PULLDOWN || EXTERNAL PULLUP
+		else /* EXTERNAL_PULLDOWN || EXTERNAL PULLUP */
 		{
 			/* disable input pullup if external connection is used */
 			MPORT_enuSetPinMode(Local_uint8CurrPortPin, MPORT_PIN_MODE_INPUT_PULLDOWN);
