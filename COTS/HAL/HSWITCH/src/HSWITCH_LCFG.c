@@ -16,13 +16,13 @@ HSWITCH_structSwitchConfig_t Global_HSWITCH_structSwitchConfigArr[NUM_OF_SWITCHE
 {
     [HSWITCH_RESET] = 
     {
-        .portNum = PORTA,
-        .pinNum = PIN1,
+        .portNum = PORTC,
+        .pinNum = PIN2,
         .connection = HSWITCH_EXTERNAL_PULLUP
     },
     [HSWITCH_LED_CONTROL] = 
     {
-        .portNum = PORTB,
+        .portNum = PORTD,
         .pinNum = PIN1,
         .connection = HSWITCH_INTERNAL_PULLUP
     }

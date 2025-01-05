@@ -13,9 +13,9 @@ typedef struct
 } H7SEGMENT_struct7SegmentConfig_t;
 
 /* macro to define the number of used LEDs */
-#define NUM_OF_7SEG     1
+#define NUM_OF_7SEG     2
 
 /* macro to define the first defined LED */
-#define FIRST_7SEG       H7SEGMENT_COUNTER
+#define FIRST_7SEG       H7SEGMENT_COUNTER_UNITS
 
 #endif

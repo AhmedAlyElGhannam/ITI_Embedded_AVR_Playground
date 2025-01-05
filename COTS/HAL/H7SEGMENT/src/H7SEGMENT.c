@@ -17,8 +17,8 @@
 
 
 /* macros for checking function arguments */
-#define IS_INVALID_7SEGMENT_NAME(X)			((((HLED_enuLEDName_t)X) > (NUM_OF_LEDS - 1)) || (((HLED_enuLEDName_t)X) < (FIRST_LED)))
-#define IS_INVALID_7SEGMENT_DIGIT(X)		((((HLED_enuLEDValue_t)X) != HLED_ON) && (((HLED_enuLEDValue_t)X) != HLED_OFF))
+#define IS_INVALID_7SEGMENT_NAME(X)			((((H7SEGMENT_enu7SegNames_t)X) > (NUM_OF_7SEG - 1)) || (((H7SEGMENT_enu7SegNames_t)X) < (FIRST_7SEG)))
+#define IS_INVALID_7SEGMENT_DIGIT(X)		((((uint8_t)X) > 0x09))
 #define IS_CONNECTED_7SEG_COUNT_LESS_THAN_NUM_OF_DIGITS(X)	(((uint8_t)X) > NUM_OF_7SEG)
 
 /* macros for checking 7 segment mode of operation */
@@ -27,10 +27,11 @@
 
 /* macro to count the number of digits in a number */
 #define COUNT_NUM_OF_DIGITS_IN_VAL(X, COUNT)		\
-					do {					\
-  						  (X) /= 10;			\
-  						  ++(COUNT);			\
-  					   } while ((X) != 0)		
+							do 						\
+							{						\
+  								(X) /= 10;			\
+  								++(COUNT);			\
+  							} while ((X) != 0)		
 
 /* macro to define the number of displayable values */
 #define H7SEGMENT_NUM_OF_DISPLAYABLE_VALS	10
@@ -53,6 +54,7 @@ static uint8_t H7SEGMENT_uint8ArrNumberToVal[H7SEGMENT_NUM_OF_DISPLAYABLE_VALS] 
 	H7SEGMENT_NINE
 };
 
+
 /*
  * @brief	Initializes all 7 segments as per the configuration defined in the array located in LCFG.c
  *                   
@@ -64,31 +66,31 @@ void H7SEGMENT_voidInit(void)
 {
 	/* defining variables for port pin && iterator */
 	uint8_t Local_uint8CurrPortPin = 0x00;
-	uint8_t Local_uint8Iter1;
-	uint8_t Local_uint8Iter2;
+	uint8_t Local_uint8Iter7SegNum;
+	uint8_t Local_uint8Iter7SegPin;
 
-	for (Local_uint8Iter = 0; Local_uint8Iter < NUM_OF_LEDS; Local_uint8Iter++)
+	for (Local_uint8Iter7SegNum = 0; Local_uint8Iter7SegNum < NUM_OF_7SEG; Local_uint8Iter7SegNum++)
 	{
 		/* looping over all 7 segment pins to initialize them */
-		for (Local_uint8Iter2 = H7SEGMENT_PIN_a; Local_uint8Iter2 <= H7SEGMENT_PIN_dot; Local_uint8Iter2++)
+		for (Local_uint8Iter7SegPin = H7SEGMENT_PIN_a; Local_uint8Iter7SegPin <= H7SEGMENT_PIN_dot; Local_uint8Iter7SegPin++)
 		{
 			/* extract and combine port && pin numbers into a single value to pass to MPORT function */
-			Local_uint8CurrPortPin = SET_HIGH_NIB_TO_VAL(Local_uint8CurrPortPin, Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter].portNum) + SET_LOW_NIB_TO_VAL(Local_uint8CurrPortPin, Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter].pinsConnection[Local_uint8Iter2]);
+			Local_uint8CurrPortPin = SET_HIGH_NIB_TO_VAL(Local_uint8CurrPortPin, Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter7SegNum].portNum) + SET_LOW_NIB_TO_VAL(Local_uint8CurrPortPin, Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter7SegNum].pinsConnection[Local_uint8Iter7SegPin]);
 
 			/* configure this 7 segment pin as output */
 			MPORT_enuSetPinDirection(Local_uint8CurrPortPin, MPORT_PORT_PIN_OUTPUT);
 		}
 
 		/* depending on 7 segment connection initialize all 7 segment LEDs to OFF */
-		if (IS_7SEGMENT_COMMON_ANODE(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter].connection))
+		if (IS_7SEGMENT_COMMON_ANODE(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter7SegNum].connection))
 		{
-			/* initialize pins to low */
-			MDIO_enuSetPortValue(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter].portNum, MDIO_PORT_HIGH);
+			/* initialize pins to high to turn LEDs off */
+			MDIO_enuSetPortValue(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter7SegNum].portNum, MDIO_PORT_HIGH);
 		}
-		else if (IS_7SEGMENT_COMMON_CATHODE(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter].connection))
+		else if (IS_7SEGMENT_COMMON_CATHODE(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter7SegNum].connection))
 		{
-			/* initialize pins to high */
-			MDIO_enuSetPortValue(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter].portNum, MDIO_PORT_LOW);
+			/* initialize pins to low to turn LEDs off */
+			MDIO_enuSetPortValue(Global_H7SEGMENT_struct7SegmentConfigArr[Local_uint8Iter7SegNum].portNum, MDIO_PORT_LOW);
 		}
 		else {}
 	}
@@ -104,7 +106,7 @@ void H7SEGMENT_voidInit(void)
  *				
  * @return H7SEGMENT_OK || H7SEGMENT_INVALID_7SEG_NAME || H7SEGMENT_INVALID_DIGIT || H7SEGMENT_NOK
  */
-H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteDigit(uint8_t Copy_uint8_7SegmentName, HLED_enuLEDValue_t Copy_uint8Digit)
+H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteDigit(uint8_t Copy_uint8_7SegmentName, uint8_t Copy_uint8Digit)
 {
     /* defining a variable to store return address */
 	H7SEGMENT_enuErrorStatus_t ret_enuStatus = H7SEGMENT_OK;
@@ -150,7 +152,7 @@ H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteDigit(uint8_t Copy_uint8_7SegmentNa
 
 			/* loop over all 7 segment pins and set their values accordingly via MDIO API */
 			ret_enuStatus = MDIO_enuSetPinValue(
-				Global_HLED_structLEDConfigArr[Copy_uint8LEDName].portNum,
+				Global_H7SEGMENT_struct7SegmentConfigArr[Copy_uint8_7SegmentName].portNum,
 				Local_uint8Iter,
 				Local_uint8TempPinState
 			);
@@ -177,11 +179,11 @@ H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteDigit(uint8_t Copy_uint8_7SegmentNa
 /*
  * @brief	Writes a multip-digit number on multiple 7 segment displays
  *                   
- * @param (in) Copy_uint16MultiDigitValue -> 7 segment name as defined by the user in H7SEGMENT_enu7SegNames_t enum
+ * @param (in) Copy_uint32MultiDigitValue -> 7 segment name as defined by the user in H7SEGMENT_enu7SegNames_t enum
  *				
  * @return H7SEGMENT_OK || H7SEGMENT_LIMIT_ERROR || H7SEGMENT_NOK
  */
-H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteMultiDigitValue(uint16_t Copy_uint16MultiDigitValue)
+H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteMultiDigitValue(uint32_t Copy_uint32MultiDigitValue)
 {
 	/* defining a variable to store return address */
 	H7SEGMENT_enuErrorStatus_t ret_enuStatus = H7SEGMENT_OK;
@@ -190,15 +192,15 @@ H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteMultiDigitValue(uint16_t Copy_uint1
 	uint8_t Local_uint8Iter;
 
 	/* defining a temporary variable to hold the passed value */
-	uint16_t Local_uint16TempMultiDigitValue = Copy_uint16MultiDigitValue;
+	uint32_t Local_uint32TempMultiDigitValue = Copy_uint32MultiDigitValue;
 
 	/* defining variable to store digit count of passed value */
 	uint8_t Local_uint8ValueDigitCount = 0;
 
 	/* counting the number of digits in the passed value */
-	COUNT_NUM_OF_DIGITS_IN_VAL(Local_uint16TempMultiDigitValue, Local_uint8ValueDigitCount);
+	COUNT_NUM_OF_DIGITS_IN_VAL(Local_uint32TempMultiDigitValue, Local_uint8ValueDigitCount);
 
-	/* defining an array to store the separate digits (max 5 for uint16) */
+	/* defining an array to store the separate digits (max 5 for uint32) */
 	uint8_t Local_uint8ArrSeparateValueDigits[5] = {0};
 
 	/* digit count must not exceed the number of connected 7 segments */
@@ -210,13 +212,13 @@ H7SEGMENT_enuErrorStatus_t H7SEGMENT_enuWriteMultiDigitValue(uint16_t Copy_uint1
 	else /* argument is valid */
 	{
 		/* counting the number of digits in the passed value && extracting each digit */
-		while (Copy_uint16MultiDigitValue != 0)
+		while (Copy_uint32MultiDigitValue != 0)
 		{
 			/* extracting the first digit of passed value and storing it in arr */
-			Local_uint8ArrSeparateValueDigits[Local_uint8ValueDigitCount] = Copy_uint16MultiDigitValue % 10;
+			Local_uint8ArrSeparateValueDigits[Local_uint8ValueDigitCount] = Copy_uint32MultiDigitValue % 10;
 
 			/* deleting the extracted digit from the value */
-			Copy_uint16MultiDigitValue /= 10;
+			Copy_uint32MultiDigitValue /= 10;
 		}
 
 		/* displaying passed value's digits on appropriate count of 7 segments */
