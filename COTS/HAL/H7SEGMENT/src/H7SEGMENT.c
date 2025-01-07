@@ -33,12 +33,6 @@
   								(COUNT)++;			\
   							} while ((X) != 0)		
 
-#define MAX_DISPLAYABLE_NUM_ON_7SEG(X)				\
-							do						\
-							{						\
-													\
-							} while()						\
-
 /* macro to define the number of displayable values */
 #define H7SEGMENT_NUM_OF_DISPLAYABLE_VALS	10
 
