@@ -8,27 +8,19 @@
 #include "MDIO_MockReg.h"
 #include "MPORT.h"
 #include "MPORT_LCFG.h"
+#include "HLED.h"
+#include "HLED_LCFG.h"
 #include "unity_internals.h"
 #include "unity.h"
 
-/* only one test for void MPORT_voidInit(void) */
-// void UTEST_MPORT_voidInit_ValidEntriesInArr(void);
+/* only one test for void MPORT_voidInit(void) 
+void UTEST_HLED_voidInit_ValidEntriesInArr(void);*/
 
-/* tests for MPORT_enuErrorStatus_t MPORT_enuSetPinDirection(MPORT_enuPortPin_t Copy_enuPortPinNum,  MPORT_enuPortPinDir_t  Copy_enuPortPinDir) */
-// wrong port pin format
-void UTEST_MPORT_enuSetPinDirection_InvalidPortPinNum(void);
-// wrong port pin direction
-void UTEST_MPORT_enuSetPinDirection_InvalidPortPinDir(void);
-// valid inputs
-void UTEST_MPORT_enuSetPinDirection_ValidInputs(void);
-
-/* tests for MPORT_enuErrorStatus_t MPORT_enuSetPinMode(MPORT_enuPortPin_t Copy_enuPortPinNum, MPORT_enuPortPinMode_t Copy_enuPortPinMode) */
-// wrong port pin format
-void UTEST_MPORT_enuSetPinMode_InvalidPortPinNum(void);
-// wrong port pin direction
-void UTEST_MPORT_enuSetPinMode_InvalidPortPinMode(void);
-// valid inputs
-void UTEST_MPORT_enuSetPinMode_ValidInputs(void);
+/* HLED_enuErrorStatus_t HLED_uint8SetLEDValue(uint8_t Copy_uint8LEDName, HLED_enuLEDValue_t Copy_uint8LEDValue) */
+void UTEST_HLED_uint8SetLEDValue_InvalidLEDName(void);
+void UTEST_HLED_uint8SetLEDValue_InvalidLEDValue(void);
+void UTEST_HLED_uint8SetLEDValue_ValidInputsForwardConnection(void);
+void UTEST_HLED_uint8SetLEDValue_ValidInputsReverseConnection(void);
 
 
 #endif

@@ -1,18 +1,18 @@
 #include "test.h"
 
+
 int main(void)
 {
     UNITY_BEGIN(); // unit test beginning
 
-    // MPORT_enuSetPinDirection tests
-    RUN_TEST(UTEST_MPORT_enuSetPinDirection_InvalidPortPinNum);
-    RUN_TEST(UTEST_MPORT_enuSetPinDirection_InvalidPortPinDir);
-    RUN_TEST(UTEST_MPORT_enuSetPinDirection_ValidInputs);
+    /* HLED_voidInit test
+    RUN_TEST(UTEST_HLED_voidInit_ValidEntriesInArr);*/
 
-    // MPORT_enuSetPinMode tests
-    RUN_TEST(UTEST_MPORT_enuSetPinMode_InvalidPortPinNum);
-    RUN_TEST(UTEST_MPORT_enuSetPinMode_InvalidPortPinMode);
-    RUN_TEST(UTEST_MPORT_enuSetPinMode_ValidInputs);
+    // HLED_uint8SetLEDValue tests
+    RUN_TEST(UTEST_HLED_uint8SetLEDValue_InvalidLEDName);
+    RUN_TEST(UTEST_HLED_uint8SetLEDValue_InvalidLEDValue);
+    RUN_TEST(UTEST_HLED_uint8SetLEDValue_ValidInputsForwardConnection);
+    RUN_TEST(UTEST_HLED_uint8SetLEDValue_ValidInputsReverseConnection);
 
     UNITY_END(); // unit test end
     return 0;

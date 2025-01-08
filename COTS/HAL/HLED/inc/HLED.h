@@ -52,7 +52,7 @@ typedef enum
 typedef enum
 {
     HLED_START = 0x00,
-    HLED_ALERT,
+    HLED_ALERT = 0x01,
     HLED_STOP = 0x02,
 } HLED_enuLEDName_t;
 

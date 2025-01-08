@@ -16,6 +16,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 # setting compiler flags for C (as written in included unity Makefile)
 add_compile_options(
     # -std=c89   
+    -g  # for debugging symbols
     -pg # for profiling info  
     -Wall 
     -Wextra

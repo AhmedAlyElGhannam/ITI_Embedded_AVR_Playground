@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_C_STANDARD 11)
 
 # project name + defining used languages 
-project(HLED_UNIT_TEST C)
+project(H7SEGMENT_UNIT_TEST C)
 
 # defining include dir 
 set(${PROJECT_NAME}_INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/inc/")
