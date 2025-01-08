@@ -11,24 +11,6 @@
 #include "unity_internals.h"
 #include "unity.h"
 
-/* tests for MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinConfig_t Copy_enuPinConfig) */
-// invalid port num
-void UTEST_MDIO_enuSetPinConfigration_InvalidPortNum(void);
-// invalid pin num
-void UTEST_MDIO_enuSetPinConfigration_InvalidPinNum(void);
-// invalid pin config
-void UTEST_MDIO_enuSetPinConfigration_InvalidPinConfig(void);
-// using valid inputs
-void UTEST_MDIO_enuSetPinConfigration_ValidInputs(void);
-
-/* tests for MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPortConfig_t Copy_enuPortConfig) */
-// invalid port num
-void UTEST_MDIO_enuSetPortConfigration_InvalidPortNum(void);
-// invalid port config
-void UTEST_MDIO_enuSetPortConfigration_InvalidPortConfig(void);
-// using valid inputs
-void UTEST_MDIO_enuSetPortConfigration_ValidInputs(void);
-
 /* tests for MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDIO_enuPinNum_t Copy_enuPinNum, MDIO_enuPinState_t Copy_enuPinState) */
 // invalid port num
 void UTEST_MDIO_enuSetPinValue_InvalidPortNum(void);

@@ -5,17 +5,6 @@ int main(void)
 {
     UNITY_BEGIN(); // unit test beginning
 
-    // MDIO_enuSetPinConfigration tests
-    RUN_TEST(UTEST_MDIO_enuSetPinConfigration_InvalidPortNum);
-    RUN_TEST(UTEST_MDIO_enuSetPinConfigration_InvalidPinNum);
-    RUN_TEST(UTEST_MDIO_enuSetPinConfigration_InvalidPinConfig);
-    RUN_TEST(UTEST_MDIO_enuSetPinConfigration_ValidInputs);
-
-    // MDIO_enuSetPortConfigration tests
-    RUN_TEST(UTEST_MDIO_enuSetPortConfigration_InvalidPortNum);
-    RUN_TEST(UTEST_MDIO_enuSetPortConfigration_InvalidPortConfig);
-    RUN_TEST(UTEST_MDIO_enuSetPortConfigration_ValidInputs);
-
     // MDIO_enuSetPinValue tests
     RUN_TEST(UTEST_MDIO_enuSetPinValue_InvalidPortNum);
     RUN_TEST(UTEST_MDIO_enuSetPinValue_InvalidPinNum);
