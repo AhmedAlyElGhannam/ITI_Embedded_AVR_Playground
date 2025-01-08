@@ -1,0 +1,1 @@
+../../../../COTS/HAL/H7SEGMENT/src/H7SEGMENT.c

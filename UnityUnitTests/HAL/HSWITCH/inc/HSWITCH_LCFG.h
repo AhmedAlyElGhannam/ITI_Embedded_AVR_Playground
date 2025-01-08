@@ -1,0 +1,1 @@
+../../../../COTS/HAL/HSWITCH/inc/HSWITCH_LCFG.h
