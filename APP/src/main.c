@@ -1,41 +1,39 @@
-#define F_CPU 	8000000UL
-#include <util/delay.h>
 #include "std_types.h"
-#include "HLED.h"
-#include "HSWITCH.h"
-#include "H7SEGMENT.h"
-#include "MDIO.h"
-
+#include <util/delay.h>
+#include "MPORT.h"
+#include "HLCD.h"
 
 int main(void)
 {
 	
-	/* testing H7SEGMENT && HSWITCH functions */
+	/* testing HLCD functions */
+	HLCD_structLCDObject_t local_structLCDObject = 
+	{
+		.HLCD_DataPort = PORTA,
+		.HLCD_ConfigPort = PORTB,
+		.HLCD_RS = PIN0,
+		.HLCD_RW = PIN1,
+		.HLCD_E  = PIN2
+	};
 
-	/* calling init functions */
-	HSWITCH_voidInit();
-	H7SEGMENT_voidInit(); 
-	HLED_voidInit();
+	MPORT_voidInit();
 
-	/* defining variable to store button state */
-	uint8_t Local_uint8Button1State;
+	/* calling init function */
+	HLCD_enuInit(&local_structLCDObject);
 
-	/* defining a variable to display its value on 7 segment */
-	uint16_t Local_uint16Counter = 0;
+	/* printing a string on first line */
+	HLCD_enuWriteString(&local_structLCDObject, "Kotuwaru!");
 
-	/* calling H7SEGMENT API to display 0 on both 7 segment displays */
-	H7SEGMENT_enuWriteDigit(H7SEGMENT_COUNTER_UNITS, Local_uint16Counter);
+	/* shifting to line 2 */
+	HLCD_enuGoToXY(&local_structLCDObject, HLCD_COL_00, HLCD_LINE_02);
 
+	/* printing an int */
+	HLCD_enuWriteInteger(&local_structLCDObject, 86);
+
+	/* keep it stuck in an infinite loop */
 	while (true)
 	{
-		HSWITCH_enuGetSwitchValue(HSWITCH_RESET, &Local_uint8Button1State);
-		if (Local_uint8Button1State == HSWITCH_PRESSED)
-		{
-			Local_uint16Counter++;
-			H7SEGMENT_enuWriteMultiDigitValue(Local_uint16Counter);
-		}
-
-		_delay_ms(150);
+		
 	}
 
 	return 0;

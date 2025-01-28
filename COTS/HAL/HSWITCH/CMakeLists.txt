@@ -19,6 +19,18 @@ set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
 
+# compiler options for library
+target_compile_options( ${PROJECT_NAME}
+    PRIVATE
+    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+)
+
+# linker options for library
+target_link_options( ${PROJECT_NAME}
+	PRIVATE
+	-Wl,--gc-sections
+)
+
 # link with required MCAL libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${MCAL_LIB})
 

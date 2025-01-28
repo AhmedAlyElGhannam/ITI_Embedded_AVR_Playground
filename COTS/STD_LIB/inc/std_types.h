@@ -13,6 +13,8 @@ typedef float float32_t;
 typedef double float64_t;
 
 #define NULL ((void*)0)
+#define NULL_CHAR   ('\0')
+#define F_CPU 	8000000UL
 
 typedef enum
 {

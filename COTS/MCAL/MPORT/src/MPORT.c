@@ -30,7 +30,7 @@
 #define IS_INVALID_PORT_PIN_MODE(X)		((((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_INPUT_PULLUP) && (((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_INPUT_PULLDOWN) && (((MPORT_enuPortPinMode_t)X) != MPORT_PIN_MODE_UART))
 
 /* accessing pin configuration array defined in LCFG.c file */
-extern MPORT_structPortPinDirAndMode_t MDIO_enuArrPinConfig[MPORT_NUM_OF_ALL_PINS];
+extern MPORT_structPortPinDirAndMode_t MPORT_enuArrPinConfig[MPORT_NUM_OF_ALL_PINS];
 
 /* macro to combine pin && port numbers in required format */
 #define COMBINE_PORT_AND_PIN(PORTx, PINn)   ((PORTx << 4) | (PINn))
@@ -68,10 +68,10 @@ void MPORT_voidInit(void)
         Local_uint8CombinedPortAndPinNum = COMBINE_PORT_AND_PIN(Local_uint8PortNum, Local_uint8PinNum);
         
         /* call MPORT function to set specified port pin direction */
-        MPORT_enuSetPinDirection(Local_uint8CombinedPortAndPinNum, MDIO_enuArrPinConfig[Local_uint8Iter].dir);
+        MPORT_enuSetPinDirection(Local_uint8CombinedPortAndPinNum, MPORT_enuArrPinConfig[Local_uint8Iter].dir);
         
         /* call MPORT function to set specified port pin mode */
-        MPORT_enuSetPinMode(Local_uint8CombinedPortAndPinNum, MDIO_enuArrPinConfig[Local_uint8Iter].mode);
+        MPORT_enuSetPinMode(Local_uint8CombinedPortAndPinNum, MPORT_enuArrPinConfig[Local_uint8Iter].mode);
     }
 
     return;
