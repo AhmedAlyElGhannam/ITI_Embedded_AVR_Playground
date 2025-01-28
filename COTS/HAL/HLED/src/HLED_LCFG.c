@@ -20,15 +20,15 @@ HLED_structLEDConfig_t Global_HLED_structLEDConfigArr[NUM_OF_LEDS] =
         .pinNum = PIN0,
         .connection = HLED_FORWARD
     },
-    [HLED_STOP] = 
-    {
-        .portNum = PORTB,
-        .pinNum = PIN0,
-        .connection = HLED_FORWARD
-    },
     [HLED_ALERT] = 
     {
         .portNum = PORTC,
+        .pinNum = PIN0,
+        .connection = HLED_FORWARD
+    },
+    [HLED_STOP] = 
+    {
+        .portNum = PORTB,
         .pinNum = PIN0,
         .connection = HLED_FORWARD
     }

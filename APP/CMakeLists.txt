@@ -49,6 +49,7 @@ set(HAL_LIB
 	HLED
 	HSWITCH
 	H7SEGMENT
+	HLCD
 )
 
 # looping over all HAL libs to build them
@@ -69,17 +70,29 @@ set(CMAKE_AR avr-ar)
 set(CMAKE_LINKER avr-ld)
 
 # setting compiler flags for C && Cpp
-add_compile_options(-Wall -Os -g -mmcu=${COMPILE_MCU_NAME})
+# add_compile_options()
 
 ## TO DO
 # add_compiler_definitions() # to define macros
 
 # setting linker flags
-add_link_options(-mmcu=${COMPILE_MCU_NAME} -Wl,--gc-sections)
+# add_link_options( )
 
 # compiling and getting .elf file
 add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}") # main target
 target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${MCAL_LIB} ${HAL_LIB})
+
+# compiler options for target
+target_compile_options( ${PROJECT_NAME}.elf
+    PRIVATE
+    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+)
+
+# linker options for target
+target_link_options( ${PROJECT_NAME}.elf
+	PRIVATE
+	-Wl,--gc-sections
+)
 
 # calling macro for converting .elf into .hex and flashing it on specified mcu
 convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})

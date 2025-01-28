@@ -21,6 +21,18 @@ set(${PROJECT_NAME}_INC_FILES "${${PROJECT_NAME}_LIB_INC_FILES}" "${${PROJECT_NA
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}")
 
+# compiler options for library
+target_compile_options( ${PROJECT_NAME}
+    PRIVATE
+    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+)
+
+# linker options for library
+target_link_options( ${PROJECT_NAME}
+	PRIVATE
+	-Wl,--gc-sections
+)
+
 # in order to allow main to use .h & pbcfg.h -> make them interface
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 

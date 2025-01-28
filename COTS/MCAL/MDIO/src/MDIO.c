@@ -25,7 +25,7 @@
 #define IS_INVALID_PIN_CONFIG(X)		((((MDIO_enuPinConfig_t)X) != MDIO_PIN_OUTPUT) && (((MDIO_enuPinConfig_t)X) != MDIO_PIN_INPUT_PULLUP) && (((MDIO_enuPinConfig_t)X) != MDIO_PIN_INPUT))
 #define IS_INVALID_PORT_CONFIG(X)		(((((MDIO_enuPortConfig_t)X)) != MDIO_PORT_OUTPUT) && (((MDIO_enuPortConfig_t)X) != MDIO_PORT_INPUT))
 #define IS_INVALID_PIN_STATE(X)			((((MDIO_enuPinState_t)X) != MDIO_PIN_HIGH) && (((MDIO_enuPinState_t)X) != MDIO_PIN_LOW))
-#define IS_INVALID_PORT_STATE(X)		((((MDIO_enuPortState_t)X) != MDIO_PORT_HIGH) && (((MDIO_enuPortState_t)X) != MDIO_PORT_LOW))
+#define IS_INVALID_PORT_STATE(X)		((((MDIO_enuPortState_t)X) > MDIO_PORT_HIGH) || (((MDIO_enuPortState_t)X) < MDIO_PORT_LOW))
 #define IS_INVALID_PTR(X)				((X) == NULL)
 
 /*
@@ -73,7 +73,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum, MDI
 			/* clear bit corresponding to pin number if state is LOW */
 			CLR_BIT(Local_strPtrCurrPort->PORT, Copy_enuPinNum);
 		}
-		else {} // written and left empty in compliance with MISRA C
+		else {} /* written and left empty in compliance with MISRA C */
 	}
 
 	return ret_enumStatus;

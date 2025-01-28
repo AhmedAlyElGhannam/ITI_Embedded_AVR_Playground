@@ -37,7 +37,7 @@ void HLED_voidInit(void)
 	uint8_t Local_uint8CurrPortPin = 0x00;
 	uint8_t Local_uint8Iter;
 
-	for (Local_uint8Iter = 0; Local_uint8Iter < NUM_OF_LEDS; Local_uint8Iter++)
+	for (Local_uint8Iter = FIRST_LED; Local_uint8Iter < NUM_OF_LEDS; Local_uint8Iter++)
 	{
 		/* extract and combine port && pin numbers into a single value to pass to MPORT function */
 		Local_uint8CurrPortPin = SET_HIGH_NIB_TO_VAL(Local_uint8CurrPortPin, Global_HLED_structLEDConfigArr[Local_uint8Iter].portNum) + SET_LOW_NIB_TO_VAL(Local_uint8CurrPortPin, Global_HLED_structLEDConfigArr[Local_uint8Iter].pinNum);
