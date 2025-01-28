@@ -62,6 +62,12 @@ typedef enum
     HLCD_COL_15 = 0x0FU,
 } HLCD_enuColPosition_t;
 
+typedef enum 
+{
+    HLCD_ENABLE = 1U,
+    HLCD_DISABLE = 0U,
+} HLCD_enuFeatureConfig_t;
+
 typedef struct 
 {
     HAL_enuPortName_t   HLCD_ConfigPort;
@@ -78,9 +84,7 @@ typedef struct
 
 } HLCD_structLCDObject_t;
 
-/*
-    ENTRY MODE SET == INPUT SET
-*/
+
 typedef enum 
 {
     HLCD_CMD01_CLR_DISPLAY = 0b00000001U,
@@ -115,15 +119,15 @@ extern HLCD_enuErrorStatus_t HLCD_enuWriteString(const HLCD_structLCDObject_t* c
 extern HLCD_enuErrorStatus_t HLCD_enuWriteInteger(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint32_t copt_uint32Number);
 extern HLCD_enuErrorStatus_t HLCD_enuGoToXY(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8X, uint8_t Copy_uint8Y);
 extern HLCD_enuErrorStatus_t HLCD_enuClrDisplay(const HLCD_structLCDObject_t* const ptr_structLCDObject);
+extern HLCD_enuErrorStatus_t HLCD_enuStoreSpecialCharacter(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8BlockNumber, const uint8_t* const ptr_uint8Pattern);
 extern HLCD_enuErrorStatus_t HLCD_enuDisplaySpecialCharacter(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8PatternNumber, uint8_t Copy_uint8Row, uint8_t Copy_uint8Column);
 extern HLCD_enuErrorStatus_t HLCD_enuReturnHome(const HLCD_structLCDObject_t* const ptr_structLCDObject);
-extern HLCD_enuErrorStatus_t HLCD_enuCursorBlinkOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag);
-extern HLCD_enuErrorStatus_t HLCD_enuDisplayOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag);
-extern HLCD_enuErrorStatus_t HLCD_enuCursorShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag);
-extern HLCD_enuErrorStatus_t HLCD_enuCursorShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag);
-extern HLCD_enuErrorStatus_t HLCD_enuDisplayShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag);
-extern HLCD_enuErrorStatus_t HLCD_enuDisplayShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag);
-
+extern HLCD_enuErrorStatus_t HLCD_enuCursorBlinkOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Config);
+extern HLCD_enuErrorStatus_t HLCD_enuDisplayOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Config);
+extern HLCD_enuErrorStatus_t HLCD_enuCursorShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject);
+extern HLCD_enuErrorStatus_t HLCD_enuCursorShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject);
+extern HLCD_enuErrorStatus_t HLCD_enuDisplayShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject);
+extern HLCD_enuErrorStatus_t HLCD_enuDisplayShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject);
 
 
 

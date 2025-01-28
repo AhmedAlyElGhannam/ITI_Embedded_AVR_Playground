@@ -13,6 +13,7 @@
 #define IS_INVALID_LINE(LINE)           (((LINE) != HLCD_LINE_01) && ((LINE) != HLCD_LINE_02))
 #define IS_INVALID_COL(COL)             (((COL) > HLCD_COL_15) || ((COL) < HLCD_COL_00))
 #define IS_NULL_PTR(PTR)                ((PTR) == NULL)
+#define IS_INVALID_CONFIG(CFG)          (((CFG) != HLCD_ENABLE) && ((CFG) != HLCD_DISABLE)) 
 
 HLCD_enuErrorStatus_t HLCD_enuInit(const HLCD_structLCDObject_t* const ptr_structLCDObject)
 {
@@ -289,6 +290,8 @@ HLCD_enuErrorStatus_t HLCD_enuGoToXY(const HLCD_structLCDObject_t* const ptr_str
     {
         HLCD_voidWriteCommand(ptr_structLCDObject, (Copy_uint8X + Copy_uint8Y));
     }
+
+    return ret_enumStatus;
 }
 
 HLCD_enuErrorStatus_t HLCD_enuClrDisplay(const HLCD_structLCDObject_t* const ptr_structLCDObject)
@@ -317,6 +320,86 @@ HLCD_enuErrorStatus_t HLCD_enuClrDisplay(const HLCD_structLCDObject_t* const ptr
     {
         HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD01_CLR_DISPLAY);
     }
+
+    return ret_enumStatus;
+}
+
+static HLCD_enuErrorStatus_t HLCD_enuGoToCGRAM(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8BlockNumber)
+{
+    HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
+
+    if (IS_NULL_PTR(ptr_structLCDObject))
+    {
+        ret_enumStatus = HLCD_NULL_PTR;
+    }
+    else if (IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_ConfigPort) || IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_DataPort))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    else if ( IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RS) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RW) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_E))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #if (HLCD_MODE_OF_OPERATION == HLCD_4_BIT_MODE)
+    else if (IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[3]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[2]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[1]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[0]))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #endif
+    else
+    {
+        #if (HLCD_MODE_OF_OPERATION == HLCD_8_BIT_MODE)
+        HLCD_voidWriteCommand(ptr_structLCDObject, (Copy_uint8BlockNumber * 8) + 64);
+        #else 
+        HLCD_voidWriteCommand(ptr_structLCDObject, (Copy_uint8BlockNumber * 8) + 64);
+        #endif
+    }
+
+    return ret_enumStatus;
+}
+
+HLCD_enuErrorStatus_t HLCD_enuStoreSpecialCharacter(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8BlockNumber, const uint8_t* const ptr_uint8Pattern)
+{
+    HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
+    uint8_t local_uint8Iter;
+
+    if (IS_NULL_PTR(ptr_structLCDObject) || IS_NULL_PTR(ptr_uint8Pattern))
+    {
+        ret_enumStatus = HLCD_NULL_PTR;
+    }
+    else if (IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_ConfigPort) || IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_DataPort))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    else if ( IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RS) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RW) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_E))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #if (HLCD_MODE_OF_OPERATION == HLCD_4_BIT_MODE)
+    else if (IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[3]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[2]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[1]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[0]))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #endif
+    else
+    {
+        #if (HLCD_MODE_OF_OPERATION == HLCD_8_BIT_MODE)
+        ret_enumStatus = HLCD_enuGoToCGRAM(ptr_structLCDObject, Copy_uint8BlockNumber);
+        if (ret_enumStatus == HLCD_OK)
+        {
+            for (local_uint8Iter = 0; local_uint8Iter < 8; local_uint8Iter++)
+            {
+                ret_enumStatus = HLCD_enuWriteCharacter(ptr_structLCDObject, ptr_uint8Pattern[local_uint8Iter]);
+                if (ret_enumStatus != HLCD_OK)
+                    break;
+            }
+        }
+        #else 
+        4-bit code is not implemented yet
+        #endif
+    }
+
+    return ret_enumStatus;
 }
 
 HLCD_enuErrorStatus_t HLCD_enuDisplaySpecialCharacter(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8PatternNumber, uint8_t Copy_uint8Row, uint8_t Copy_uint8Column)
@@ -343,8 +426,11 @@ HLCD_enuErrorStatus_t HLCD_enuDisplaySpecialCharacter(const HLCD_structLCDObject
     #endif
     else
     {
-    
+        HLCD_enuGoToXY(ptr_structLCDObject, Copy_uint8Column, Copy_uint8Row);
+        HLCD_voidWriteCommand(ptr_structLCDObject, Copy_uint8PatternNumber);
     }
+
+    return ret_enumStatus;
 }
 
 HLCD_enuErrorStatus_t HLCD_enuReturnHome(const HLCD_structLCDObject_t* const ptr_structLCDObject)
@@ -371,11 +457,95 @@ HLCD_enuErrorStatus_t HLCD_enuReturnHome(const HLCD_structLCDObject_t* const ptr
     #endif
     else
     {
-    
+        HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD02_RET_HOME);
     }
+
+    return ret_enumStatus;
 }
 
-HLCD_enuErrorStatus_t HLCD_enuCursorBlinkOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag)
+HLCD_enuErrorStatus_t HLCD_enuCursorBlinkOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Config)
+{
+    HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
+
+    if (IS_NULL_PTR(ptr_structLCDObject))
+    {
+        ret_enumStatus = HLCD_NULL_PTR;
+    }
+    else if (IS_INVALID_CONFIG(Copy_uint8Config))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    else if (IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_ConfigPort) || IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_DataPort))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    else if ( IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RS) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RW) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_E))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #if (HLCD_MODE_OF_OPERATION == HLCD_4_BIT_MODE)
+    else if (IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[3]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[2]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[1]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[0]))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #endif
+    else
+    {
+        if (Copy_uint8Config == HLCD_ENABLE)
+        {
+            HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD04_CURSOR_BLINK_ON);
+        }
+        else
+        {
+            HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD04_CURSOR_BLINK_OFF);
+        }
+    }
+
+    return ret_enumStatus;
+}
+
+HLCD_enuErrorStatus_t HLCD_enuDisplayOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Config)
+{
+    HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
+
+    if (IS_NULL_PTR(ptr_structLCDObject))
+    {
+        ret_enumStatus = HLCD_NULL_PTR;
+    }
+    else if (IS_INVALID_CONFIG(Copy_uint8Config))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    else if (IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_ConfigPort) || IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_DataPort))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    else if ( IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RS) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RW) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_E))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #if (HLCD_MODE_OF_OPERATION == HLCD_4_BIT_MODE)
+    else if (IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[3]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[2]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[1]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[0]))
+    {
+        ret_enumStatus = HLCD_INVALID_PARAM;
+    }
+    #endif
+    else
+    {
+        if (Copy_uint8Config == HLCD_ENABLE)
+        {
+            HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD04_DISPLAY_ON);
+        }
+        else
+        {
+            HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD04_DISPLAY_OFF);
+        }
+    }
+
+    return ret_enumStatus;
+}
+
+HLCD_enuErrorStatus_t HLCD_enuCursorShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject)
 {
     HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
 
@@ -399,11 +569,14 @@ HLCD_enuErrorStatus_t HLCD_enuCursorBlinkOnOff(const HLCD_structLCDObject_t* con
     #endif
     else
     {
-    
+        HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD05_CURSOR_SHIFT_SET | HLCD_CMD05_SHIFT_LEFT);
+
     }
+
+    return ret_enumStatus;
 }
 
-HLCD_enuErrorStatus_t HLCD_enuDisplayOnOff(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag)
+HLCD_enuErrorStatus_t HLCD_enuCursorShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject)
 {
     HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
 
@@ -427,11 +600,13 @@ HLCD_enuErrorStatus_t HLCD_enuDisplayOnOff(const HLCD_structLCDObject_t* const p
     #endif
     else
     {
-    
+        HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD05_CURSOR_SHIFT_SET | HLCD_CMD05_SHIFT_RIGHT);
     }
+
+    return ret_enumStatus;
 }
 
-HLCD_enuErrorStatus_t HLCD_enuCursorShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag)
+HLCD_enuErrorStatus_t HLCD_enuDisplayShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject)
 {
     HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
 
@@ -455,11 +630,13 @@ HLCD_enuErrorStatus_t HLCD_enuCursorShiftLeft(const HLCD_structLCDObject_t* cons
     #endif
     else
     {
-    
+        HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD05_DISPLAY_SHIFT_SET | HLCD_CMD05_SHIFT_LEFT);
     }
+
+    return ret_enumStatus;
 }
 
-HLCD_enuErrorStatus_t HLCD_enuCursorShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag)
+HLCD_enuErrorStatus_t HLCD_enuDisplayShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject)
 {
     HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
 
@@ -483,62 +660,8 @@ HLCD_enuErrorStatus_t HLCD_enuCursorShiftRight(const HLCD_structLCDObject_t* con
     #endif
     else
     {
-    
+        HLCD_voidWriteCommand(ptr_structLCDObject, HLCD_CMD05_DISPLAY_SHIFT_SET | HLCD_CMD05_SHIFT_RIGHT);
     }
-}
 
-HLCD_enuErrorStatus_t HLCD_enuDisplayShiftLeft(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag)
-{
-    HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
-
-    if (IS_NULL_PTR(ptr_structLCDObject))
-    {
-        ret_enumStatus = HLCD_NULL_PTR;
-    }
-    else if (IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_ConfigPort) || IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_DataPort))
-    {
-        ret_enumStatus = HLCD_INVALID_PARAM;
-    }
-    else if ( IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RS) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RW) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_E))
-    {
-        ret_enumStatus = HLCD_INVALID_PARAM;
-    }
-    #if (HLCD_MODE_OF_OPERATION == HLCD_4_BIT_MODE)
-    else if (IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[3]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[2]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[1]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[0]))
-    {
-        ret_enumStatus = HLCD_INVALID_PARAM;
-    }
-    #endif
-    else
-    {
-    
-    }
-}
-
-HLCD_enuErrorStatus_t HLCD_enuDisplayShiftRight(const HLCD_structLCDObject_t* const ptr_structLCDObject, uint8_t Copy_uint8Flag)
-{
-    HLCD_enuErrorStatus_t ret_enumStatus = HLCD_OK;
-
-    if (IS_NULL_PTR(ptr_structLCDObject))
-    {
-        ret_enumStatus = HLCD_NULL_PTR;
-    }
-    else if (IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_ConfigPort) || IS_INVALID_PORT_NUM(ptr_structLCDObject->HLCD_DataPort))
-    {
-        ret_enumStatus = HLCD_INVALID_PARAM;
-    }
-    else if ( IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RS) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_RW) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_E))
-    {
-        ret_enumStatus = HLCD_INVALID_PARAM;
-    }
-    #if (HLCD_MODE_OF_OPERATION == HLCD_4_BIT_MODE)
-    else if (IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[3]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[2]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[1]) || IS_INVALID_PIN_NUM(ptr_structLCDObject->HLCD_DataPinsArr[0]))
-    {
-        ret_enumStatus = HLCD_INVALID_PARAM;
-    }
-    #endif
-    else
-    {
-    
-    }
+    return ret_enumStatus;
 }
