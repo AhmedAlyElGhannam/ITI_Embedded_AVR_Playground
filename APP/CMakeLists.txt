@@ -19,13 +19,16 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../COTS/convert-to-hex-plus-flash.cmake)
 # avr mcu is ATMEGA32 clocked @16MHz
 set(COMPILE_MCU_NAME atmega32) 	# for compiler
 set(FLASH_MCU_NAME m32)    	# for avrdude
-#set(FCPU 16000000UL)	# for frequency
+set(F_CPU 8000000UL)	# for frequency
 
 # programmer type 
 set(PROGRAMMER usbasp) 
 
 # setting avrdude flash flags
 set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
+
+# AVR-specific paths for my avr-toolchain
+include_directories("/home/nemesis/x-tools/avr/avr/include/")
 
 # collect all .c files
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
@@ -61,38 +64,29 @@ foreach(hal_lib ${HAL_LIB})
 endforeach()
 
 # setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER avr-gcc)
-
-# setting default ar (lib archiving) tool in this CMake file
-set(CMAKE_AR avr-ar)
-
-# setting default linker in this CMake file
-set(CMAKE_LINKER avr-ld)
-
-# setting compiler flags for C && Cpp
-# add_compile_options()
-
-## TO DO
-# add_compiler_definitions() # to define macros
-
-# setting linker flags
-# add_link_options( )
+set(CMAKE_C_COMPILER "/home/nemesis/x-tools/avr/bin/avr-gcc")
 
 # compiling and getting .elf file
 add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}") # main target
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${MCAL_LIB} ${HAL_LIB})
 
-# compiler options for target
 target_compile_options( ${PROJECT_NAME}.elf
     PRIVATE
-    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+    -mmcu=${COMPILE_MCU_NAME}
+	-DF_CPU=${F_CPU}
+	-funsigned-char -funsigned-bitfields -DDEBUG
+	-MD -MP -MF "$(@:%.o=%.d)" -MT "$(@:%.o=%.d)" -MT "$(@:%.o=%.o)"
+	-Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall
+	-I${AVR_INCLUDE_DIR}
 )
 
 # linker options for target
 target_link_options( ${PROJECT_NAME}.elf
 	PRIVATE
 	-Wl,--gc-sections
+	-mmcu=${COMPILE_MCU_NAME}
 )
+
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE MPORT ${HAL_LIB})
 
 # calling macro for converting .elf into .hex and flashing it on specified mcu
 convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})

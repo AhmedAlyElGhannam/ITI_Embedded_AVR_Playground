@@ -1,9 +1,9 @@
 #include "std_types.h"
 #include "MDIO_PBCFG.h"
 #include "MDIO.h"
-#include "MPORT_LCFG.h"
-#include "MPORT_PBCFG.h"
-#include "MPORT.h"
+// #include "MPORT_LCFG.h"
+// #include "MPORT_PBCFG.h"
+// #include "MPORT.h"
 #include "HLCD_PBCFG.h"
 #include "HLCD.h"
 #include <util/delay.h>

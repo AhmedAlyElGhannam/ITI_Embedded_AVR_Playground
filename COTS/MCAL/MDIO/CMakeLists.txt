@@ -4,9 +4,6 @@ cmake_minimum_required(VERSION 3.22)
 # project name + defining used languages
 project(MDIO C) 
 
-# setting default compiler for C
-set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
-
 # collect library source files
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
@@ -18,13 +15,20 @@ file(GLOB_RECURSE ${PROJECT_NAME}_COMMON_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.
 # combine all header file variables into a single variable
 set(${PROJECT_NAME}_INC_FILES "${${PROJECT_NAME}_LIB_INC_FILES}" "${${PROJECT_NAME}_STDLIB_INC_FILES}" "${${PROJECT_NAME}_COMMON_INC_FILES}")
 
+# setting default compiler for C in this CMake file
+set(CMAKE_C_COMPILER "/home/nemesis/x-tools/avr/bin/avr-gcc")
+
 # create a static library
-add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}" "${${PROJECT_NAME}_INC_FILES}")
+add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
 
 # compiler options for library
 target_compile_options( ${PROJECT_NAME}
     PRIVATE
-    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+    -mmcu=${COMPILE_MCU_NAME}
+	-DF_CPU=${F_CPU}
+	-funsigned-char -funsigned-bitfields -DDEBUG
+    -MD -MP -MF "$(@:%.o=%.d)" -MT "$(@:%.o=%.d)" -MT "$(@:%.o=%.o)"
+	-Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall
 )
 
 # linker options for library

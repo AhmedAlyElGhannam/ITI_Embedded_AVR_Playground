@@ -10,11 +10,10 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 # defining a list of MCAL libraries used in this HAL library
 set(MCAL_LIB
 	MDIO
-	MPORT	
 )
 
-# setting default compiler for C
-set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
+# setting default compiler for C in this CMake file
+set(CMAKE_C_COMPILER "/home/nemesis/x-tools/avr/bin/avr-gcc")
 
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
@@ -22,7 +21,11 @@ add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
 # compiler options for library
 target_compile_options( ${PROJECT_NAME}
     PRIVATE
-    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+    -mmcu=${COMPILE_MCU_NAME}
+	-DF_CPU=${F_CPU}
+	-funsigned-char -funsigned-bitfields -DDEBUG
+	-MD -MP -MF "$(@:%.o=%.d)" -MT "$(@:%.o=%.d)" -MT "$(@:%.o=%.o)"
+	-Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall
 )
 
 # linker options for library
@@ -39,3 +42,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/in
 
 # std_lib will be public to anyone who wants to use though this MCAL lib
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../STD_LIB/inc)
+

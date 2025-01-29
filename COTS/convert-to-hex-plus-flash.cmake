@@ -6,7 +6,7 @@ macro(convert_to_hex_and_flash PROJECT_NAME TARGET_MCU PROGRAMMER)
     add_custom_target(convert-elf-to-hex 
     ALL
     DEPENDS ${PROJECT_NAME}.elf
-    COMMAND avr-objcopy ${FLASH_FLAGS} -O ihex ${PROJECT_NAME}.elf ${PROJECT_NAME}.hex
+    COMMAND avr-objcopy -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures ${PROJECT_NAME}.elf ${PROJECT_NAME}.hex
     COMMENT "Generating .hex file from .elf file"
     )
 
