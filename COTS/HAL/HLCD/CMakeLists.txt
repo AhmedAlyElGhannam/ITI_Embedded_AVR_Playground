@@ -13,7 +13,7 @@ set(MCAL_LIB
 )
 
 # setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER "/home/nemesis/x-tools/avr/bin/avr-gcc")
+set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
 
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
@@ -24,7 +24,7 @@ target_compile_options( ${PROJECT_NAME}
     -mmcu=${COMPILE_MCU_NAME}
 	-DF_CPU=${F_CPU}
 	-funsigned-char -funsigned-bitfields -DDEBUG
-	-MD -MP -MF "$(@:%.o=%.d)" -MT "$(@:%.o=%.d)" -MT "$(@:%.o=%.o)"
+    -MD -MP -MF "$(@:%.o=%.d)" -MT "$(@:%.o=%.d)" -MT "$(@:%.o=%.o)"
 	-Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall
 )
 

@@ -14,7 +14,7 @@ set(MCAL_LIB
 )
 
 # setting default compiler for C
-set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
+set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
 
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
@@ -22,7 +22,11 @@ add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
 # compiler options for library
 target_compile_options( ${PROJECT_NAME}
     PRIVATE
-    -Wall -O2 -g -mmcu=${COMPILE_MCU_NAME}
+    -mmcu=${COMPILE_MCU_NAME}
+	-DF_CPU=${F_CPU}
+	-funsigned-char -funsigned-bitfields -DDEBUG
+    -MD -MP -MF "$(@:%.o=%.d)" -MT "$(@:%.o=%.d)" -MT "$(@:%.o=%.o)"
+	-Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall
 )
 
 # linker options for library

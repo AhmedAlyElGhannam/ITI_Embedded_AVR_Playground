@@ -16,7 +16,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_COMMON_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.
 set(${PROJECT_NAME}_INC_FILES "${${PROJECT_NAME}_LIB_INC_FILES}" "${${PROJECT_NAME}_STDLIB_INC_FILES}" "${${PROJECT_NAME}_COMMON_INC_FILES}")
 
 # setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER "/home/nemesis/x-tools/avr/bin/avr-gcc")
+set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
 
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")

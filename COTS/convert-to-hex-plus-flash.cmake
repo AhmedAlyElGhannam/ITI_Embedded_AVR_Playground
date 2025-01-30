@@ -1,8 +1,5 @@
 macro(convert_to_hex_and_flash PROJECT_NAME TARGET_MCU PROGRAMMER)
-    # setting flash flags
-    set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
-
-    # adding a custom target/build rule for creating .hex file
+   # adding a custom target/build rule for creating .hex file
     add_custom_target(convert-elf-to-hex 
     ALL
     DEPENDS ${PROJECT_NAME}.elf

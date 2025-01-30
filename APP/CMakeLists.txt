@@ -13,9 +13,6 @@ set(CMAKE_C_STANDARD 99)
 # project name + defining used languages 
 project(AVR_PROJECT C)
 
-# include ,cmake script for converting .elf to .hex and flashing
-include(${CMAKE_CURRENT_SOURCE_DIR}/../COTS/convert-to-hex-plus-flash.cmake)
-
 # avr mcu is ATMEGA32 clocked @16MHz
 set(COMPILE_MCU_NAME atmega32) 	# for compiler
 set(FLASH_MCU_NAME m32)    	# for avrdude
@@ -64,7 +61,13 @@ foreach(hal_lib ${HAL_LIB})
 endforeach()
 
 # setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER "/home/nemesis/x-tools/avr/bin/avr-gcc")
+set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
+
+# include ,cmake script for converting .elf to .hex and flashing
+include(${CMAKE_CURRENT_SOURCE_DIR}/../COTS/convert-to-hex-plus-flash.cmake)
+
+# include ,cmake script for launching avrsimul && gdb for debugging
+include(${CMAKE_CURRENT_SOURCE_DIR}/../COTS/avr-simul-gdb-debug.cmake)
 
 # compiling and getting .elf file
 add_executable(${PROJECT_NAME}.elf "${${PROJECT_NAME}_SRC_FILES}") # main target
@@ -90,6 +93,9 @@ target_link_libraries(${PROJECT_NAME}.elf PRIVATE MPORT ${HAL_LIB})
 
 # calling macro for converting .elf into .hex and flashing it on specified mcu
 convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})
+
+# calling a macro that creates a custom target for launching avrsimul && gdb for debugging
+avr_simul_gdb_debug(${PROJECT_NAME})
 
 # modify the clean build rule to delete the .hex file
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${PROJECT_NAME}.hex)
