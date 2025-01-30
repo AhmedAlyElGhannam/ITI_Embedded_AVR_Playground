@@ -69,3 +69,6 @@ target remote localhost:1212
    ```bash
    layout src
    ```
+
+## Simulating Using SimulAVR && Debugging Using GDB Through VSCode
+
