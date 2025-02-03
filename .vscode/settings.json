@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "std_types.h": "c",
-        "hlcd.h": "c"
+        "hlcd.h": "c",
+        "hkeypad.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

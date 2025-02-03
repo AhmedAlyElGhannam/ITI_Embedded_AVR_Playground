@@ -50,6 +50,7 @@ set(HAL_LIB
 	HSWITCH
 	H7SEGMENT
 	HLCD
+	HKEYPAD
 )
 
 # looping over all HAL libs to build them
@@ -89,6 +90,7 @@ target_link_options( ${PROJECT_NAME}.elf
 	-mmcu=${COMPILE_MCU_NAME}
 )
 
+# MPORT library is the only MCAL lib that can be used in app layer + link all HAL libs
 target_link_libraries(${PROJECT_NAME}.elf PRIVATE MPORT ${HAL_LIB})
 
 # calling macro for converting .elf into .hex and flashing it on specified mcu
