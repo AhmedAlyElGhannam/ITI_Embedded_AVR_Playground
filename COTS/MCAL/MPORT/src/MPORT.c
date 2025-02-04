@@ -71,7 +71,9 @@ void MPORT_voidInit(void)
         MPORT_enuSetPinDirection(Local_uint8CombinedPortAndPinNum, MPORT_enuArrPinConfig[Local_uint8Iter].dir);
         
         /* call MPORT function to set specified port pin mode */
-        MPORT_enuSetPinMode(Local_uint8CombinedPortAndPinNum, MPORT_enuArrPinConfig[Local_uint8Iter].mode);
+        if (MPORT_enuArrPinConfig[Local_uint8Iter].mode != MPORT_PIN_MODE_NONE)
+            MPORT_enuSetPinMode(Local_uint8CombinedPortAndPinNum, MPORT_enuArrPinConfig[Local_uint8Iter].mode);
+        else {} /* do nothing */
     }
 
     return;

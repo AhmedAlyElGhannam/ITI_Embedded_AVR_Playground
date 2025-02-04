@@ -2,7 +2,7 @@
 
 ## Compiling, Building, and Flashing
 ```bash
-cmake -S . -B build
+cmake -S . -B build 
 cmake --build build
 cd build
 make flash

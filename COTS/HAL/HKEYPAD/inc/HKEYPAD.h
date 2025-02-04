@@ -1,6 +1,7 @@
 #ifndef HKEYPAD_H
 #define HKEYPAD_H
 
+#include "HKEYPAD_LCFG.h"
 
 /* enum for port and pin numbers --- common for all HAL so they must be defined once */
 #ifndef HAL_PORT_AND_PIN_NAMES

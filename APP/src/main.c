@@ -25,13 +25,16 @@ int main(void)
 		.ColPinsArr = {PIN4, PIN5, PIN6, PIN7}
 	};
 
-	uint8_t local_uint8PressedKey = 255;
+	uint8_t local_uint8PressedKey = '\0';
 
 
 	MPORT_voidInit();
 
-	/* calling init function */
+	/* calling init function for LCD */
 	HLCD_enuInit(&local_structLCDObject);
+
+	/* calling init function for keypad */
+	HKEYPAD_enuInit(&local_structKeypadObject);
 
 	/* printing a string on first line */
 	HLCD_enuWriteString(&local_structLCDObject, "Kotuwaru!");
@@ -48,11 +51,23 @@ int main(void)
 		/* getting keypad press and printing the pressed char on LCD */
 		HKEYPAD_enuGetPressedKey(&local_structKeypadObject, &local_uint8PressedKey);
 		
-		if (local_uint8PressedKey != 255)
-			HLCD_enuWriteCharacter(&local_structLCDObject, local_uint8PressedKey);
-		else {}
+		switch (local_uint8PressedKey)
+		{
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+			case '0':
+				HLCD_enuWriteCharacter(&local_structLCDObject, local_uint8PressedKey);				
+			break;
+		}
 
-		_delay_ms(100);
+		local_uint8PressedKey = '\0';
 	}
 
 	return 0;
