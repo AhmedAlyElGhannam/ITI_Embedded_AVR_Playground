@@ -3,6 +3,8 @@
 #include "MPORT.h"
 #include "HLCD.h"
 #include "HKEYPAD.h"
+#include "MGIE.h"
+#include "MEXTI.h"
 
 int main(void)
 {
@@ -25,6 +27,12 @@ int main(void)
 		.ColPinsArr = {PIN4, PIN5, PIN6, PIN7}
 	};
 
+	MEXTI_structIntConfig_t local_structExInt0Config = 
+	{
+		.IntNum = MEXTI_INT0,
+		.TriggerMode = MEXTI_RISING_EDGE
+	};
+
 	uint8_t local_uint8PressedKey = '\0';
 
 
@@ -44,6 +52,9 @@ int main(void)
 
 	/* printing an int 
 	HLCD_enuWriteInteger(&local_structLCDObject, 86); */
+
+	/* calling exti init */
+	MEXTI_enuInit(&local_structExInt0Config);
 
 	/* keep it stuck in an infinite loop */
 	while (true)

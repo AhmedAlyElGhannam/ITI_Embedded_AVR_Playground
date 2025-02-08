@@ -32,8 +32,10 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 # defining a list of MCAL libraries that will be used to build HAL libraries
 set(MCAL_LIB
+	MGIE
 	MDIO
-	MPORT	
+	MPORT	 
+	MEXTI
 )
 
 # looping over all libs to build them
@@ -91,7 +93,7 @@ target_link_options( ${PROJECT_NAME}.elf
 )
 
 # MPORT library is the only MCAL lib that can be used in app layer + link all HAL libs
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE MPORT ${HAL_LIB})
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE ${MCAL_LIB} ${HAL_LIB})
 
 # calling macro for converting .elf into .hex and flashing it on specified mcu
 convert_to_hex_and_flash(${PROJECT_NAME} ${FLASH_MCU_NAME} ${PROGRAMMER})

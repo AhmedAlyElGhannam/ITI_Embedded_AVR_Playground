@@ -3,7 +3,9 @@
         "std_types.h": "c",
         "hlcd.h": "c",
         "hkeypad.h": "c",
-        "mport.h": "c"
+        "mport.h": "c",
+        "mgie.h": "c",
+        "mexti.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
