@@ -6,8 +6,8 @@
 MTIMER_structTimerConfig_t global_structTimers[NUM_OF_TIMERS] = 
 {
     [TIMER0] = {
-        .timerClkSel = TIMER_CLK_SEL_DIV_BY_64,
-        .timerMode = TIMER_CTC_MODE,
+        .timerClkSel = TIMER_CLK_SEL_DIV_BY_8,
+        .timerMode = TIMER_OVF_MODE,
         .timerIntState = TIMER_INT_ENABLE
     }
 };
