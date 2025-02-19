@@ -29,7 +29,7 @@ typedef enum
 
 typedef void (*MGIE_CallBackFunction_t)(void);
 
-#define cli()       (asm("cli"))
-#define sei()       (asm("sei"))
+#define cli()  __asm__ __volatile__ ("cli" ::: "memory")
+#define sei()  __asm__ __volatile__ ("sei" ::: "memory")
 
 #endif

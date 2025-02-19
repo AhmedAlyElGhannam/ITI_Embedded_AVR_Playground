@@ -98,15 +98,15 @@ MTIMER_enuErrorStatus_t MTIMER_enuInit(MTIMER_enuTimers_t copy_enuTimer)
     switch (copy_enuTimer)
     {
         case TIMER0:
-            ret_enuErrorStatus = MTIMER_voidTimer0Init();
+            MTIMER_voidTimer0Init();
         break;
 
         case TIMER1:
-            ret_enuErrorStatus = MTIMER_voidTimer1Init();
+            MTIMER_voidTimer1Init();
         break;
 
         case TIMER2:
-            ret_enuErrorStatus = MTIMER_voidTimer2Init();
+            MTIMER_voidTimer2Init();
         break;
 
         default:
@@ -116,7 +116,7 @@ MTIMER_enuErrorStatus_t MTIMER_enuInit(MTIMER_enuTimers_t copy_enuTimer)
     return ret_enuErrorStatus;
 }
 
-MTIMER_enuErrorStatus_t MTIMER_enuSetOverflowVal(MTIMER_enuTimers_t copy_enuTimer, uint16_t copy_uint16PreloadVal)
+MTIMER_enuErrorStatus_t MTIMER_enuSetOverflowVal(MTIMER_enuTimers_t copy_enuTimer, uint32_t copy_uint32PreloadVal)
 {
     MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
     volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
@@ -124,16 +124,16 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetOverflowVal(MTIMER_enuTimers_t copy_enuTime
     switch (copy_enuTimer)
     {
         case TIMER0:
-            MTIMER->TCNT0 = (uint8_t)(0xFF & copy_uint16PreloadVal);
+            MTIMER->TCNT0 = (uint8_t)(0xFF & copy_uint32PreloadVal);
         break;
 
         case TIMER1:
-            MTIMER->TCNT1H = (uint8_t)((0xFF00 & copy_uint16PreloadVal) >> 8);
-            MTIMER->TCNT1L = (uint8_t)(0xFF & copy_uint16PreloadVal);
+            MTIMER->TCNT1H = (uint8_t)((0xFF00 & copy_uint32PreloadVal) >> 8);
+            MTIMER->TCNT1L = (uint8_t)(0xFF & copy_uint32PreloadVal);
         break;
 
         case TIMER2:
-            MTIMER->TCNT2 = (uint8_t)(0xFF & copy_uint16PreloadVal);
+            MTIMER->TCNT2 = (uint8_t)(0xFF & copy_uint32PreloadVal);
         break;
 
         default:
@@ -169,7 +169,7 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetClkSelection(MTIMER_enuTimers_t copy_enuTim
     return ret_enuErrorStatus;
 }
 
-MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(MTIMER_enuTimers_t copy_enuTimer, uint8_t copy_u8PreloadVal)
+MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(MTIMER_enuTimers_t copy_enuTimer, uint8_t copy_uint32PreloadVal)
 {
 	MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
     volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
@@ -177,17 +177,17 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(MTIMER_enuTimers_t copy_en
     switch (copy_enuTimer)
     {
         case TIMER0:
-            MTIMER->OCR0 = (uint8_t)(0xFF & copy_uint16PreloadVal);
+            MTIMER->OCR0 = (uint8_t)(0xFF & copy_uint32PreloadVal);
         break;
 
         case TIMER1:
             /* will be left on hold for now */
-            /*MTIMER->OCR1H = (uint8_t)((0xFF00 & copy_uint16PreloadVal) >> 8);
-            MTIMER->OCR1L = (uint8_t)(0xFF & copy_uint16PreloadVal);*/
+            /*MTIMER->OCR1H = (uint8_t)((0xFF00 & copy_uint32PreloadVal) >> 8);
+            MTIMER->OCR1L = (uint8_t)(0xFF & copy_uint32PreloadVal);*/
         break;
 
         case TIMER2:
-            MTIMER->OCR2 = (uint8_t)(0xFF & copy_uint16PreloadVal);
+            MTIMER->OCR2 = (uint8_t)(0xFF & copy_uint32PreloadVal);
         break;
 
         default:
@@ -199,12 +199,12 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(MTIMER_enuTimers_t copy_en
 
 
 
-MTIMER_enuErrorStatus_t MTIMER_enuGetCounterVal(MTIMER_enuTimers_t copy_enuTimer, uint16_t* ptr_uint16CounterVal)
+MTIMER_enuErrorStatus_t MTIMER_enuGetCounterVal(MTIMER_enuTimers_t copy_enuTimer, uint32_t* ptr_uint32CounterVal)
 {
     MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
     volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
 
-    if (ptr_uint16CounterVal == NULL)
+    if (ptr_uint32CounterVal == NULL)
     {
         ret_enuErrorStatus = MTIMER_NULL_PTR;
     }
@@ -213,18 +213,18 @@ MTIMER_enuErrorStatus_t MTIMER_enuGetCounterVal(MTIMER_enuTimers_t copy_enuTimer
         switch (copy_enuTimer)
         {
             case TIMER0:
-                (*ptr_uint16CounterVal) = MTIMER->TCNT0;
+                (*ptr_uint32CounterVal) = MTIMER->TCNT0;
             break;
 
             case TIMER1:
                 /* will be left on hold for now */
-                /*MTIMER->OCR1H = (uint8_t)((0xFF00 & copy_uint16PreloadVal) >> 8);
-                MTIMER->OCR1L = (uint8_t)(0xFF & copy_uint16PreloadVal);*/
-                (*ptr_uint16CounterVal) = (MTIMER->TCNT1L | (MTIMER->TCNT1H << 8));
+                /*MTIMER->OCR1H = (uint8_t)((0xFF00 & copy_uint32PreloadVal) >> 8);
+                MTIMER->OCR1L = (uint8_t)(0xFF & copy_uint32PreloadVal);*/
+                (*ptr_uint32CounterVal) = (MTIMER->TCNT1L | (MTIMER->TCNT1H << 8));
             break;
 
             case TIMER2:
-            (*ptr_uint16CounterVal) = MTIMER->TCNT2;
+            (*ptr_uint32CounterVal) = MTIMER->TCNT2;
             break;
 
             default:
@@ -240,7 +240,7 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetTimerCallBack(MGIE_CallBackFunction_t ptr_I
 {
     MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
 
-    if (ptr_uint16CounterVal == NULL)
+    if (ptr_ISR == NULL)
     {
         ret_enuErrorStatus = MTIMER_NULL_PTR;
     }
