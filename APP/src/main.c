@@ -1,6 +1,8 @@
 #include "std_types.h"
+#include "bit_math.h"
 #include <util/delay.h>
 #include "MPORT.h"
+#include "MDIO.h"
 #include "HLED.h"
 #include "HLCD.h"
 #include "HKEYPAD.h"
@@ -45,7 +47,7 @@ int main(void)
 	MPORT_voidInit();
 
 	/* LED initialization */
-	HLED_voidInit(); /* port D pin 0 */
+	// HLED_voidInit(); /* port D pin 0 */
 
 	/* calling init function for LCD */
 	HLCD_enuInit(&local_structLCDObject);
@@ -73,6 +75,8 @@ int main(void)
 
 	/* set timer overflow */
 	MTIMER_enuSetOverflowVal(TIMER0, 64);
+
+	// HLED_uint8SetLEDValue(HLED_START, HLED_ON);
 
 	/* enable interrupts */
 	sei();
@@ -108,11 +112,12 @@ int main(void)
 void timer0_callback(void)
 {
 	static uint32_t local_uint32Counter = 0;
-	static bool local_boolFlag = false;
+	static uint8_t local_boolFlag = 0;
 	if (local_uint32Counter == 3907)
 	{
 		local_boolFlag ^= 1;
-		HLED_uint8SetLEDValue(HLED_START, local_boolFlag);
+		MDIO_enuSetPinValue(MDIO_PORTD, MDIO_PIN0, local_boolFlag);
+		// HLED_uint8SetLEDValue(HLED_START, local_boolFlag);
 		local_uint32Counter = 0;
 		MTIMER_enuSetOverflowVal(TIMER0, 64);
 	}

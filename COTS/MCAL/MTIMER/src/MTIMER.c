@@ -18,6 +18,8 @@ static void MTIMER_voidTimer0Init(void)
     {
         case TIMER_OVF_MODE:
             /* no need to do a thing */
+            CLR_BIT(local_uint8RegTemp, 3);
+            CLR_BIT(local_uint8RegTemp, 6);
         break;
 
         case TIMER_PWM_PHASE_CORRECT_MODE:
@@ -44,7 +46,9 @@ static void MTIMER_voidTimer0Init(void)
     MTIMER->TCCR0 = local_uint8RegTemp;
 
     /* configure interrupt based on mode of operation */
-    MTIMER->TIMSK = (MTIMER->TIMSK & (~11U)) |  (global_structTimers[TIMER0].timerIntState << global_structTimers[TIMER0].timerMode);
+    /* this is purely for testing purposes */
+    SET_BIT(MTIMER->TIMSK, 0);
+    // MTIMER->TIMSK = (MTIMER->TIMSK & (~11U)) |  (global_structTimers[TIMER0].timerIntState << global_structTimers[TIMER0].timerMode);
 }
 
 static void MTIMER_voidTimer1Init(void)
@@ -62,6 +66,8 @@ static void MTIMER_voidTimer2Init(void)
     {
         case TIMER_OVF_MODE:
             /* no need to do a thing */
+            CLR_BIT(local_uint8RegTemp, 3);
+            CLR_BIT(local_uint8RegTemp, 6);
         break;
 
         case TIMER_PWM_PHASE_CORRECT_MODE:
@@ -88,7 +94,7 @@ static void MTIMER_voidTimer2Init(void)
     MTIMER->TCCR2 = local_uint8RegTemp;
 
     /* configure interrupt based on mode of operation (NEEDS TO BE EDITED TO MAKE SURE IT IS OK) */
-    MTIMER->TIMSK = (MTIMER->TIMSK & (~11U)) |  (global_structTimers[TIMER2].timerIntState << global_structTimers[TIMER2].timerMode);
+    // MTIMER->TIMSK = (MTIMER->TIMSK & (~11U)) |  (global_structTimers[TIMER2].timerIntState << global_structTimers[TIMER2].timerMode);
 }
 
 MTIMER_enuErrorStatus_t MTIMER_enuInit(MTIMER_enuTimers_t copy_enuTimer)
