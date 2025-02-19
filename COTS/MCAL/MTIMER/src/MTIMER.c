@@ -169,7 +169,7 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetClkSelection(MTIMER_enuTimers_t copy_enuTim
     return ret_enuErrorStatus;
 }
 
-MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(u8 copy_u8PreloadVal)
+MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(MTIMER_enuTimers_t copy_enuTimer, uint8_t copy_u8PreloadVal)
 {
 	MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
     volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
@@ -332,59 +332,4 @@ void __vector_4 (void)
         MGIE_CallBackFunctions[MGIE_TIMER2_COMPARE_MATCH]();
     }
     else {}
-}
-
-u8 TMR0_u8CTCCalculateOCRMilliSec(u32 *copy_u8FlagCounterMax, u8 copy_u8RequiredTimeInMilliSec)
-{
-	u64 local_u64Temp = (copy_u8RequiredTimeInMilliSec * 8000000UL) / 1000; // do not forget converting ms to sec
-	
-	//u8 local_u8RequiredTimeTemp = copy_u8RequiredTimeInMilliSec;
-	/*u16 local_u16LoopScale = 1000;
-	while (local_u8RequiredTimeTemp)
-	{
-		if (local_u8RequiredTimeTemp % local_u16LoopScale !)
-	}*/
-	
-	if (copy_u8RequiredTimeInMilliSec >= 10) // apply counter for time longer than or equal 10ms
-	{
-		if (copy_u8RequiredTimeInMilliSec < 10000) // less than 10sec
-		{
-			local_u64Temp /= 1000;
-			(*copy_u8FlagCounterMax) = 1000;
-		}
-		else // more than 10 sec
-		{
-			local_u64Temp /= 1000000;
-			(*copy_u8FlagCounterMax) = 2000;
-		}
-	}
-	
-	if ((local_u64Temp >= 0) && (local_u64Temp <= TMR0_RESOLUTION()))// no prescaler
-	{
-		TMR0_voidSetPrescaler(TMR_TCCR0_CS_NO_PRESCALER);
-		return ((u8)local_u64Temp);
-	}
-	else if (((local_u64Temp / 8) >= 0) && ((local_u64Temp / 8) <= TMR0_RESOLUTION()))
-	{
-		TMR0_voidSetPrescaler(TMR_TCCR0_CS_DIV_BY_8);
-		return ((u8)(local_u64Temp / 8));
-	}
-	else if (((local_u64Temp / 64) >= 0) && ((local_u64Temp / 64) <= TMR0_RESOLUTION()))
-	{
-		TMR0_voidSetPrescaler(TMR_TCCR0_CS_DIV_BY_64);
-		
-		return ((u8)(local_u64Temp / 64));
-	}  
-	else if (((local_u64Temp / 256) >= 0) && ((local_u64Temp / 256) <= TMR0_RESOLUTION()))
-	{
-		TMR0_voidSetPrescaler(TMR_TCCR0_CS_DIV_BY_256);
-		return ((u8)(local_u64Temp / 256));
-	}
-	else if (((local_u64Temp / 1024) >= 0) && ((local_u64Temp / 1024) <= TMR0_RESOLUTION()))
-	{
-		TMR0_voidSetPrescaler(TMR_TCCR0_CS_DIV_BY_1024);
-		return ((u8)(local_u64Temp / 1024));
-	}
-	
-	return 0;
 }

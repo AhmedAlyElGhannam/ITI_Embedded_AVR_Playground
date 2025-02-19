@@ -36,6 +36,7 @@ set(MCAL_LIB
 	MDIO
 	MPORT	 
 	MEXTI
+	MTIMER
 )
 
 # looping over all libs to build them

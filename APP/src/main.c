@@ -1,14 +1,20 @@
 #include "std_types.h"
 #include <util/delay.h>
 #include "MPORT.h"
+#include "HLED.h"
 #include "HLCD.h"
 #include "HKEYPAD.h"
 #include "MGIE.h"
 #include "MEXTI.h"
+#include "MTIMER.h"
+
+void timer0_callback(void);
 
 int main(void)
 {
-	
+	/* disable interrupts */
+	cli();
+
 	/* testing Keypad functions */
 	HLCD_structLCDObject_t local_structLCDObject = 
 	{
@@ -35,8 +41,11 @@ int main(void)
 
 	uint8_t local_uint8PressedKey = '\0';
 
-
+	/* initialize all pins in mcu */
 	MPORT_voidInit();
+
+	/* LED initialization */
+	HLED_voidInit(); /* port D pin 0 */
 
 	/* calling init function for LCD */
 	HLCD_enuInit(&local_structLCDObject);
@@ -55,6 +64,18 @@ int main(void)
 
 	/* calling exti init */
 	MEXTI_enuInit(&local_structExInt0Config);
+
+	/* timer 0 init */
+	MTIMER_enuInit(TIMER0);
+
+	/* set callback function */
+	MTIMER_enuSetTimerCallBack(timer0_callback, MGIE_TIMER0_OVERFLOW);
+
+	/* set timer overflow */
+	MTIMER_enuSetOverflowVal(TIMER0, 64);
+
+	/* enable interrupts */
+	sei();
 
 	/* keep it stuck in an infinite loop */
 	while (true)
@@ -84,3 +105,21 @@ int main(void)
 	return 0;
 }
 
+void timer0_callback(void)
+{
+	static uint32_t local_uint32Counter = 0;
+	static bool local_boolFlag = false;
+	if (local_uint32Counter == 3907)
+	{
+		local_boolFlag ^= 1;
+		HLED_uint8SetLEDValue(HLED_START, local_boolFlag);
+		local_uint32Counter = 0;
+		MTIMER_enuSetOverflowVal(TIMER0, 64);
+	}
+	else 
+	{
+		local_uint32Counter++;
+	}
+
+	return;
+}
