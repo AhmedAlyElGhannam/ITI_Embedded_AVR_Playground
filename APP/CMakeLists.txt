@@ -1,17 +1,15 @@
 # set minimum required version of cmake to avoid errors
 cmake_minimum_required(VERSION 3.22)
 
-# to make sure CMake knows that the target will not be executed on this machine
-set(CMAKE_SYSTEM_NAME Generic)
+# toolchain settings
+include(${CMAKE_CURRENT_SOURCE_DIR}/../TOOLCHAIN/avr-gcc.cmake)
 
-# setting target architecture to AVR
-set(CMAKE_SYSTEM_PROCESSOR avr)
+# project name + defining used languages 
+project(AVR_PROJECT)
+enable_language(C)
 
 # set C && Cpp versions
 set(CMAKE_C_STANDARD 99)
-
-# project name + defining used languages 
-project(AVR_PROJECT C)
 
 # avr mcu is ATMEGA32 clocked @16MHz
 set(COMPILE_MCU_NAME atmega32) 	# for compiler
@@ -20,12 +18,6 @@ set(F_CPU 8000000UL)	# for frequency
 
 # programmer type 
 set(PROGRAMMER usbasp) 
-
-# setting avrdude flash flags
-set(FLASH_FLAGS "-R .eeprom -R .lock -R .signature")
-
-# AVR-specific paths for my avr-toolchain
-include_directories("/home/nemesis/x-tools/avr/avr/include/")
 
 # collect all .c files
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
@@ -65,7 +57,7 @@ foreach(hal_lib ${HAL_LIB})
 endforeach()
 
 # setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
+# set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
 
 # include ,cmake script for converting .elf to .hex and flashing
 include(${CMAKE_CURRENT_SOURCE_DIR}/../COTS/convert-to-hex-plus-flash.cmake)

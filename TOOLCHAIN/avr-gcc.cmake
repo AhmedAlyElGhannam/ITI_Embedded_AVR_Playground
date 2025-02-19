@@ -1,6 +1,13 @@
 # find_package("gcc-avr" REQUIRED)
+
+# to make sure CMake knows that the target will not be executed on this machine
 set(CMAKE_SYSTEM_NAME Generic)
+
+# setting target architecture to AVR
 set(CMAKE_SYSTEM_PROCESSOR avr)
+
+# C version
+set(CMAKE_C_STANDARD 99)
 
 # avr- must be part of path environment
 set(TOOLCHAIN_PREFIX "/usr/bin/avr-")

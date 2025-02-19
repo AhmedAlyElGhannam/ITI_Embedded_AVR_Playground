@@ -2,7 +2,8 @@
 cmake_minimum_required(VERSION 3.22)
 
 # project name + defining used languages
-project(HKEYPAD C) 
+project(HKEYPAD)
+enable_language(C)
 
 # collect library source files
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
@@ -11,9 +12,6 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 set(MCAL_LIB
 	MDIO
 )
-
-# setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
 
 # create a static library
 add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")

@@ -2,27 +2,14 @@
 cmake_minimum_required(VERSION 3.22)
 
 # project name + defining used languages
-project(MTIMER C) 
+project(MTIMER) 
+enable_language(C)
 
 # collect library source files
 file(GLOB_RECURSE ${PROJECT_NAME}_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
-# collecting GIE src file
-file(GLOB_RECURSE GIE_SRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/GIE/src/*.c)
-
-# collect library header files
-file(GLOB_RECURSE ${PROJECT_NAME}_LIB_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/inc/*.h)
-file(GLOB_RECURSE ${PROJECT_NAME}_STDLIB_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../STD_LIB/inc/*.h)
-file(GLOB_RECURSE ${PROJECT_NAME}_COMMON_INC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/inc/*.h)
-
-# combine all header file variables into a single variable
-set(${PROJECT_NAME}_INC_FILES "${${PROJECT_NAME}_LIB_INC_FILES}" "${${PROJECT_NAME}_STDLIB_INC_FILES}" "${${PROJECT_NAME}_COMMON_INC_FILES}")
-
-# setting default compiler for C in this CMake file
-set(CMAKE_C_COMPILER "/usr/bin/avr-gcc")
-
 # create a static library
-add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}" ${GIE_SRC_FILE})
+add_library(${PROJECT_NAME} STATIC "${${PROJECT_NAME}_SRC_FILES}")
 
 # compiler options for library
 target_compile_options( ${PROJECT_NAME}

@@ -16,7 +16,6 @@ extern const uint8_t HKEYPAD_uint8CharLayout1Arr[HKEYPAD_NO_OF_ROWS][HKEYPAD_NO_
 HKEYPAD_enuErrorStatus_t HKEYPAD_enuInit(HKEYPAD_structKeypadObject_t* Ptr_structKeypadObj)
 {
     HKEYPAD_enuErrorStatus_t Local_enuErrorStatus = HKEYPAD_OK;
-    uint8_t Local_uint8RowIter;
     uint8_t Local_uint8ColIter;
 
     if(IS_NULL_PTR(Ptr_structKeypadObj))
