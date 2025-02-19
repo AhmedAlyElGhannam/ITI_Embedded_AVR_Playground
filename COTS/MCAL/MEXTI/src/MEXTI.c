@@ -9,7 +9,7 @@ extern MGIE_CallBackFunction_t MGIE_CallBackFunctions[MGIE_NUM_OF_INTERRUPTS];
 MEXTI_enuErrorStatus_t MEXTI_enuInit(MEXTI_structIntConfig_t* Ptr_structIntConfig)
 {
     MEXTI_enuErrorStatus_t Local_enuErrorStatus = MEXTI_OK;
-    MEXTI_strRegisters_t* EXTI = (MEXTI_strRegisters_t*)MEXTI_BASE_ADDRESS;
+    volatile MEXTI_strRegisters_t* EXTI = (volatile MEXTI_strRegisters_t*)MEXTI_BASE_ADDRESS;
 
     if (NULL == Ptr_structIntConfig)
     {
