@@ -236,13 +236,20 @@ MTIMER_enuErrorStatus_t MTIMER_enuGetCounterVal(MTIMER_enuTimers_t copy_enuTimer
 }
 
 
-void TMR_voidCallBack(MGIE_CallBackFunction_t ptr_ISR, MGIE_enuVectorTable_t copy_enuISRNum)
+MTIMER_enuErrorStatus_t MTIMER_enuSetTimerCallBack(MGIE_CallBackFunction_t ptr_ISR, MGIE_enuVectorTable_t copy_enuISRNum)
 {
-	if (ptr_ISR != NULL)
+    MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
+
+    if (ptr_uint16CounterVal == NULL)
+    {
+        ret_enuErrorStatus = MTIMER_NULL_PTR;
+    }
+	else
     {
 		MGIE_CallBackFunctions[copy_enuISRNum] = ptr_ISR;
     }
-    else {}
+
+    return ret_enuErrorStatus;
 }
 
 
@@ -250,49 +257,70 @@ void __vector_11 (void)	__attribute__((signal));
 void __vector_11 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER0_OVERFLOW] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER0_OVERFLOW]();
+    }
+    else {}
 }
 
 void __vector_10 (void)	__attribute__((signal));
 void __vector_10 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER0_COMPARE_MATCH] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER0_COMPARE_MATCH]();
+    }
+    else {}
 }
 
 void __vector_9 (void) __attribute__((signal));
 void __vector_9 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER1_OVERFLOW] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER1_OVERFLOW]();
+    }
+    else {}
 }
 
 void __vector_8 (void) __attribute__((signal));
 void __vector_8 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER1_COMPARE_MATCH_B] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER1_COMPARE_MATCH_B]();
+    }
+    else {}
 }
 
 void __vector_7 (void) __attribute__((signal));
 void __vector_7 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER1_COMPARE_MATCH_A] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER1_COMPARE_MATCH_A]();
+    }
+    else {}
 }
 
 void __vector_6 (void) __attribute__((signal));
 void __vector_6 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER1_CAPTURE_EVENT] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER1_CAPTURE_EVENT]();
+    }
+    else {}
 }
 
 void __vector_5 (void) __attribute__((signal)) ;
 void __vector_5 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER2_OVERFLOW] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER2_OVERFLOW]();
+    }
+    else {}
 }
 
 /*TIMER2 CTC Mode ISR*/
@@ -300,7 +328,10 @@ void __vector_4 (void) __attribute__((signal));
 void __vector_4 (void)
 {
 	if (MGIE_CallBackFunctions[MGIE_TIMER2_COMPARE_MATCH] != NULL)
+    {
         MGIE_CallBackFunctions[MGIE_TIMER2_COMPARE_MATCH]();
+    }
+    else {}
 }
 
 u8 TMR0_u8CTCCalculateOCRMilliSec(u32 *copy_u8FlagCounterMax, u8 copy_u8RequiredTimeInMilliSec)
