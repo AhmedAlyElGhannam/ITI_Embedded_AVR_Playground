@@ -242,6 +242,81 @@ MTIMER_enuErrorStatus_t MTIMER_enuGetCounterVal(MTIMER_enuTimers_t copy_enuTimer
 }
 
 
+static uint32_t ceil(float32_t num) 
+{
+    /* get the integer part of the number */
+    int int_part = (int)num; 
+    
+    /* if the number is positive and has a decimal part, round up */
+    if (num > int_part) 
+    {
+        int_part += 1;
+    }
+
+    return int_part;
+}
+
+/* time is in ms */
+MTIMER_enuErrorStatus_t MTIMER_enuSetTimeMs(MTIMER_enuTimers_t copy_enuTimer, uint32_t copy_uint32Time, uint32_t* ptr_uint32OverflowCount)
+{
+    MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
+    volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
+
+    if ((copy_enuTimer != TIMER0) && (copy_enuTimer != TIMER1) && (copy_enuTimer != TIMER2))
+    {
+        ret_enuErrorStatus = MTIMER_INVALID_PARAM;
+    }
+    else if (ptr_uint32OverflowCount != NULL)
+    {
+        ret_enuErrorStatus = MTIMER_NULL_PTR;
+    }
+    else 
+    {
+        /* tick time (125ns) */
+        uint32_t local_uint32TickTime = (1000000000UL) / F_CPU; /* result is in ns */
+        
+        /* overflow time */
+        uint32_t local_uint32OverflowTime = 0;
+        if ((copy_enuTimer == TIMER0) || (copy_enuTimer == TIMER2))
+        {
+            /* timer 0  && 2 resolution is 2^8 */
+            local_uint32OverflowTime = local_uint32TickTime * 256; 
+        }
+        else if (copy_enuTimer == TIMER1)
+        {
+            /* timer 1 resolution is 2^16 */
+            local_uint32OverflowTime = local_uint32TickTime * 65536UL; 
+        }
+        else {}
+
+        /* calculate num of overflows (all units must be in ns) */
+        (*ptr_uint32OverflowCount) = ceil((float32_t)((copy_uint32Time * 1000000F) / local_uint32TickTime));
+
+        /* calculate fraction of num of OVFs*/
+        float32_t local_float32NumOfOVFsFrac = ((float32_t)((copy_uint32Time * 1000000F) / local_uint32TickTime)) - (*ptr_uint32OverflowCount);
+
+        /* calculate preload val */
+        uint32_t local_uint32PreloadVal = 0;
+        if ((copy_enuTimer == TIMER0) || (copy_enuTimer == TIMER2))
+        {
+            /* timer 0  && 2 resolution is 2^8 */
+            local_uint32PreloadVal = 256 - (local_float32NumOfOVFsFrac * 256); 
+        }
+        else if (copy_enuTimer == TIMER1)
+        {
+            /* timer 1 resolution is 2^16 */
+            local_uint32PreloadVal = 65536UL - (local_float32NumOfOVFsFrac * 65536UL); 
+        }
+        else {}
+
+        /* set overflow val */
+        MTIMER_enuSetOverflowVal(copy_enuTimer, local_uint32PreloadVal);
+    }
+    
+    return ret_enuErrorStatus;
+}
+
+
 MTIMER_enuErrorStatus_t MTIMER_enuSetTimerCallBack(MGIE_CallBackFunction_t ptr_ISR, MGIE_enuVectorTable_t copy_enuISRNum)
 {
     MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
@@ -257,7 +332,6 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetTimerCallBack(MGIE_CallBackFunction_t ptr_I
 
     return ret_enuErrorStatus;
 }
-
 
 void __vector_11 (void)	__attribute__((signal));
 void __vector_11 (void)

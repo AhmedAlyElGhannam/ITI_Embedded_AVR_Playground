@@ -5,7 +5,9 @@
     "hkeypad.h": "c",
     "mport.h": "c",
     "mgie.h": "c",
-    "mexti.h": "c"
+    "mexti.h": "c",
+    "mtimer.h": "c",
+    "mtimer_registers.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": "",
