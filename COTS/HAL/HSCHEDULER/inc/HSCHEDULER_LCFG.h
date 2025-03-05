@@ -1,6 +1,5 @@
-#ifndef HSCHEDULER_H
-#define HSCHEDULER_H
-
+#ifndef HSCHEDULER_LCFG_H
+#define HSCHEDULER_LCFG_H
 
 
 
