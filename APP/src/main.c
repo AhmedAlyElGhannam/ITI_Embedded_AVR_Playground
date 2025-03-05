@@ -9,6 +9,7 @@
 #include "MGIE.h"
 #include "MEXTI.h"
 #include "MTIMER.h"
+#include "HSCHEDULER.h"
 
 void timer0_callback(void);
 
@@ -107,6 +108,13 @@ int main(void)
 	}
 
 	return 0;
+}
+
+void APP_voidToggleLED(void)
+{
+	static uint8_t local_boolFlag = 0;
+	local_boolFlag ^= 1;
+	MDIO_enuSetPinValue(MDIO_PORTD, MDIO_PIN0, local_boolFlag);
 }
 
 void timer0_callback(void)

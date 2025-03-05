@@ -1,9 +1,16 @@
 #include "std_types.h"
 #include "MGIE.h"
 #include "MTIMER.h"
+#include "HSCHEDULER_LCFG.h"
+#include "HSCHEDULER.h"
 
 extern HSCHEDULER_structRunnable_t HSCHEDULER_structRunnableArr[NUM_OF_RUNNABLES];
 uint32_t global_uint32OverflowCount = 0;
+
+// HSCHEDULER_enuErrorStatus_t HSCHEDULER_enuRegisterRunnable(HSCHEDULER_structRunnable_t* ptr_structRunnable)
+// {
+
+// }
 
 void HSCHEDULER_voidInit(void)
 {

@@ -46,6 +46,7 @@ set(HAL_LIB
 	H7SEGMENT
 	HLCD
 	HKEYPAD
+	HSCHEDULER
 )
 
 # looping over all HAL libs to build them

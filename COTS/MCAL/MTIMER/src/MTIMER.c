@@ -290,10 +290,10 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetTimeMs(MTIMER_enuTimers_t copy_enuTimer, ui
         else {}
 
         /* calculate num of overflows (all units must be in ns) */
-        (*ptr_uint32OverflowCount) = ceil((float32_t)((copy_uint32Time * 1000000F) / local_uint32TickTime));
+        (*ptr_uint32OverflowCount) = ceil((float32_t)((copy_uint32Time * 1000000UL) / local_uint32TickTime));
 
         /* calculate fraction of num of OVFs*/
-        float32_t local_float32NumOfOVFsFrac = ((float32_t)((copy_uint32Time * 1000000F) / local_uint32TickTime)) - (*ptr_uint32OverflowCount);
+        float32_t local_float32NumOfOVFsFrac = ((float32_t)((copy_uint32Time * 1000000UL) / local_uint32TickTime)) - (*ptr_uint32OverflowCount);
 
         /* calculate preload val */
         uint32_t local_uint32PreloadVal = 0;
