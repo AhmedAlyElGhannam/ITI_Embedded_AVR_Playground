@@ -7,7 +7,8 @@
     "mgie.h": "c",
     "mexti.h": "c",
     "mtimer.h": "c",
-    "mtimer_registers.h": "c"
+    "mtimer_registers.h": "c",
+    "hscheduler.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": "",

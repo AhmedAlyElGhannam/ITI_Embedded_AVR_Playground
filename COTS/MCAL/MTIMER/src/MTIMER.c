@@ -324,6 +324,14 @@ static uint32_t ceil(float32_t num)
     return int_part;
 }
 
+static uint8_t getTimerPrescaler(MTIMER_enuTimers_t copy_enuTimer)
+{
+    if (copy_enuTimer == TIMER0)
+    {
+        return 8;
+    }
+}
+
 /* time is in ms */
 MTIMER_enuErrorStatus_t MTIMER_enuSetTimeMs(MTIMER_enuTimers_t copy_enuTimer, uint32_t copy_uint32Time, uint32_t* ptr_uint32OverflowCount)
 {
@@ -334,34 +342,34 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetTimeMs(MTIMER_enuTimers_t copy_enuTimer, ui
     {
         ret_enuErrorStatus = MTIMER_INVALID_PARAM;
     }
-    else if (ptr_uint32OverflowCount != NULL)
+    else if (ptr_uint32OverflowCount == NULL)
     {
         ret_enuErrorStatus = MTIMER_NULL_PTR;
     }
     else 
     {
-        /* tick time (125ns) */
-        uint32_t local_uint32TickTime = (1000000000UL) / F_CPU; /* result is in ns */
+        /* tick time (1us) */
+        uint32_t local_uint32TickTime = (1000000UL) / (F_CPU / getTimerPrescaler(copy_enuTimer)); /* result is in us */
         
         /* overflow time */
         uint32_t local_uint32OverflowTime = 0;
         if ((copy_enuTimer == TIMER0) || (copy_enuTimer == TIMER2))
         {
             /* timer 0  && 2 resolution is 2^8 */
-            local_uint32OverflowTime = local_uint32TickTime * 256; 
+            local_uint32OverflowTime = local_uint32TickTime * 256; /* 256 * 1us */
         }
         else if (copy_enuTimer == TIMER1)
         {
             /* timer 1 resolution is 2^16 */
-            local_uint32OverflowTime = local_uint32TickTime * 65536UL; 
+            local_uint32OverflowTime = local_uint32TickTime * 65536UL; /* 65536 * 1us */
         }
         else {}
 
-        /* calculate num of overflows (all units must be in ns) */
-        (*ptr_uint32OverflowCount) = ceil((float32_t)((copy_uint32Time * 1000000UL) / local_uint32TickTime));
+        /* calculate num of overflows (all units must be in us) */
+        (*ptr_uint32OverflowCount) = ceil((float32_t)((copy_uint32Time * 1000UL) / local_uint32OverflowTime)); /* (time_ms * 1000) / 1 */
 
         /* calculate fraction of num of OVFs*/
-        float32_t local_float32NumOfOVFsFrac = ((float32_t)((copy_uint32Time * 1000000UL) / local_uint32TickTime)) - (*ptr_uint32OverflowCount);
+        float32_t local_float32NumOfOVFsFrac = ((float32_t)((copy_uint32Time * 1000UL) / local_uint32OverflowTime)) - (*ptr_uint32OverflowCount);
 
         /* calculate preload val */
         uint32_t local_uint32PreloadVal = 0;

@@ -12,128 +12,130 @@
 #include "HSCHEDULER.h"
 #include "MUSART.h"
 
-void timer0_callback(void);
+// void timer0_callback(void);
+
+// uint8_t data = 'F';
+
+// void tx(void);
+// void rx(void);
 
 int main(void)
 {
 	/* disable interrupts */
 	cli();
 
-	/* testing Keypad functions */
-	HLCD_structLCDObject_t local_structLCDObject = 
-	{
-		.HLCD_DataPort = PORTA,
-		.HLCD_ConfigPort = PORTB,
-		.HLCD_RS = PIN0,
-		.HLCD_RW = PIN1,
-		.HLCD_E  = PIN2
-	};
+	// /* testing Keypad functions */
+	// HLCD_structLCDObject_t local_structLCDObject = 
+	// {
+	// 	.HLCD_DataPort = PORTA,
+	// 	.HLCD_ConfigPort = PORTB,
+	// 	.HLCD_RS = PIN0,
+	// 	.HLCD_RW = PIN1,
+	// 	.HLCD_E  = PIN2
+	// };
 
-	HKEYPAD_structKeypadObject_t local_structKeypadObject = 
-	{
-		.RowPinsPort = PORTC,
-		.ColPinsPort = PORTC,
-		.RowPinsArr = {PIN0, PIN1, PIN2, PIN3},
-		.ColPinsArr = {PIN4, PIN5, PIN6, PIN7}
-	};
+	// HKEYPAD_structKeypadObject_t local_structKeypadObject = 
+	// {
+	// 	.RowPinsPort = PORTC,
+	// 	.ColPinsPort = PORTC,
+	// 	.RowPinsArr = {PIN0, PIN1, PIN2, PIN3},
+	// 	.ColPinsArr = {PIN4, PIN5, PIN6, PIN7}
+	// };
 
-	MEXTI_structIntConfig_t local_structExInt0Config = 
-	{
-		.IntNum = MEXTI_INT0,
-		.TriggerMode = MEXTI_RISING_EDGE
-	};
+	// MEXTI_structIntConfig_t local_structExInt0Config = 
+	// {
+	// 	.IntNum = MEXTI_INT0,
+	// 	.TriggerMode = MEXTI_RISING_EDGE
+	// };
 
-	uint8_t local_uint8PressedKey = '\0';
+	// uint8_t local_uint8PressedKey = '\0';
 
-	/* initialize all pins in mcu */
+	// /* initialize all pins in mcu */
 	MPORT_voidInit();
 
-	/* LED initialization */
-	// HLED_voidInit(); /* port D pin 0 */
+	// /* LED initialization */
+	HLED_voidInit(); /* port D pin 0 */
 
-	/* calling init function for LCD */
-	HLCD_enuInit(&local_structLCDObject);
+	HSCHEDULER_voidInit();
 
-	/* calling init function for keypad */
-	HKEYPAD_enuInit(&local_structKeypadObject);
+	// /* calling init function for LCD */
+	// HLCD_enuInit(&local_structLCDObject);
 
-	/* printing a string on first line */
-	HLCD_enuWriteString(&local_structLCDObject, "Kotuwaru!");
+	// /* calling init function for keypad */
+	// HKEYPAD_enuInit(&local_structKeypadObject);
 
-	/* shifting to line 2 */
-	HLCD_enuGoToXY(&local_structLCDObject, HLCD_COL_00, HLCD_LINE_02);
+	// /* printing a string on first line */
+	// HLCD_enuWriteString(&local_structLCDObject, "Kotuwaru!");
 
-	/* printing an int 
-	HLCD_enuWriteInteger(&local_structLCDObject, 86); */
+	// /* shifting to line 2 */
+	// HLCD_enuGoToXY(&local_structLCDObject, HLCD_COL_00, HLCD_LINE_02);
 
-	/* calling exti init */
-	MEXTI_enuInit(&local_structExInt0Config);
+	// /* printing an int 
+	// HLCD_enuWriteInteger(&local_structLCDObject, 86); */
 
-	/* timer 0 init */
-	MTIMER_enuInit(TIMER0);
+	// /* calling exti init */
+	// MEXTI_enuInit(&local_structExInt0Config);
 
-	/* set callback function */
-	MTIMER_enuSetTimerCallBack(timer0_callback, MGIE_TIMER0_OVERFLOW);
+	// /* timer 0 init */
+	// MTIMER_enuInit(TIMER0);
 
-	/* set timer overflow */
-	MTIMER_enuSetOverflowVal(TIMER0, 64);
+	// /* set callback function */
+	// MTIMER_enuSetTimerCallBack(timer0_callback, MGIE_TIMER0_OVERFLOW);
+
+	// /* set timer overflow */
+	// MTIMER_enuSetOverflowVal(TIMER0, 64);
 
 	// HLED_uint8SetLEDValue(HLED_START, HLED_ON);
 
+	// MUSART_enuSetUSARTCallBack(tx, MGIE_USART_TX_COMPLETE);
+	// MUSART_enuSetUSARTCallBack(rx, MGIE_USART_RX_COMPLETE);
+	// MUSART_enuInit();
 	/* enable interrupts */
 	sei();
+
+	// MUSART_enuSendDataSync(data);
 
 	/* keep it stuck in an infinite loop */
 	while (true)
 	{
-		/* getting keypad press and printing the pressed char on LCD */
-		HKEYPAD_enuGetPressedKey(&local_structKeypadObject, &local_uint8PressedKey);
+		// /* getting keypad press and printing the pressed char on LCD */
+		// HKEYPAD_enuGetPressedKey(&local_structKeypadObject, &local_uint8PressedKey);
 		
-		switch (local_uint8PressedKey)
-		{
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-			case '0':
-				HLCD_enuWriteCharacter(&local_structLCDObject, local_uint8PressedKey);				
-			break;
-		}
+		// switch (local_uint8PressedKey)
+		// {
+		// 	case '1':
+		// 	case '2':
+		// 	case '3':
+		// 	case '4':
+		// 	case '5':
+		// 	case '6':
+		// 	case '7':
+		// 	case '8':
+		// 	case '9':
+		// 	case '0':
+		// 		HLCD_enuWriteCharacter(&local_structLCDObject, local_uint8PressedKey);				
+		// 	break;
+		// }
 
-		local_uint8PressedKey = '\0';
+		// local_uint8PressedKey = '\0';
 	}
 
 	return 0;
 }
+
+// void tx(void)
+// {
+// 	/* probably do not need this but will leave it */
+// }
+// void rx(void)
+// {
+// 	MUSART_enuSendDataSync(data);
+// 	MUSART_enuReceiveDataSync(&data);
+// }
 
 void APP_voidToggleLED(void)
 {
 	static uint8_t local_boolFlag = 0;
 	local_boolFlag ^= 1;
 	MDIO_enuSetPinValue(MDIO_PORTD, MDIO_PIN0, local_boolFlag);
-}
-
-void timer0_callback(void)
-{
-	static uint32_t local_uint32Counter = 0;
-	static uint8_t local_boolFlag = 0;
-	if (local_uint32Counter == 3907)
-	{
-		local_boolFlag ^= 1;
-		MDIO_enuSetPinValue(MDIO_PORTD, MDIO_PIN0, local_boolFlag);
-		// HLED_uint8SetLEDValue(HLED_START, local_boolFlag);
-		local_uint32Counter = 0;
-		MTIMER_enuSetOverflowVal(TIMER0, 64);
-	}
-	else 
-	{
-		local_uint32Counter++;
-	}
-
-	return;
 }

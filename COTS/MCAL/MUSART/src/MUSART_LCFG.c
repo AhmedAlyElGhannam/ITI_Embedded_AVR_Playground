@@ -8,7 +8,7 @@ MUSART_structConfig_t MUSART_structConfig =
 {
     .baudRate = USART_BAUD_9600,
     .dataBits = USART_DATA_BITS_8,
-    .mode = USART_MODE_ASYNC,
+    .mode = USART_MODE_SYNC,
     .parity = USART_PARITY_NONE,
     .speed = USART_SPEED_NORMAL,
     .stopBits = USART_STOP_BITS_1
