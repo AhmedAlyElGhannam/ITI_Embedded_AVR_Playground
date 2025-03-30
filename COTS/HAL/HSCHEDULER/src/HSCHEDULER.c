@@ -17,14 +17,14 @@ void HSCHEDULER_voidInit(void)
     /* disable interrupts */
     cli();
 
-    /* initialize TIMER0 to Normal (OVF) mode */
-    MTIMER_enuInit(TIMER0);
+    /* initialize TIMER2 to Normal (OVF) mode */
+    MTIMER_enuInit(TIMER2);
 
     /* set timer callback to HSCHEDULER_voidStartRunnable */
-    MTIMER_enuSetTimerCallBack(HSCHEDULER_voidStartRunnable, MGIE_TIMER0_OVERFLOW);
+    MTIMER_enuSetTimerCallBack(HSCHEDULER_voidStartRunnable, MGIE_TIMER2_OVERFLOW);
 
     /* set scheduler time to 1ms */
-    MTIMER_enuSetTimeMs(TIMER0, 1, &global_uint32OverflowCount); 
+    MTIMER_enuSetTimeMs(TIMER2, 1, &global_uint32OverflowCount); 
 
     /* enable interrupts */
     sei();

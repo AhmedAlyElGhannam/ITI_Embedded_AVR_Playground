@@ -8,7 +8,7 @@ HSCHEDULER_structRunnable_t HSCHEDULER_structRunnableArr[NUM_OF_RUNNABLES] =
 {
     [RUNNABLE_LED] = 
     {
-        .period = 2000U,
+        .period = 1000U,
         .firstDelay = 0,
         .cbf = APP_voidToggleLED
     }

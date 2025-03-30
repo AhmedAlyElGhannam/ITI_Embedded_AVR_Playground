@@ -125,6 +125,9 @@ static void MTIMER_voidTimer2Init(void)
     /* set temp value into register */
     MTIMER->TCCR2 = local_uint8TCCRTemp;
 
+    /* enable source of interrupt */
+    SET_BIT(MTIMER->TIMSK, 6);
+    // SET_BIT(MTIMER->TIMSK, 7);
     /* configure interrupt based on mode of operation (NEEDS TO BE EDITED TO MAKE SURE IT IS OK) */
     // MTIMER->TIMSK = (MTIMER->TIMSK & (~11U)) |  (global_structTimers[TIMER2].timerIntState << global_structTimers[TIMER2].timerMode);
 }
@@ -326,7 +329,7 @@ static uint32_t ceil(float32_t num)
 
 static uint8_t getTimerPrescaler(MTIMER_enuTimers_t copy_enuTimer)
 {
-    if (copy_enuTimer == TIMER0)
+    if ((copy_enuTimer == TIMER0) || (copy_enuTimer == TIMER2))
     {
         return 8;
     }

@@ -6,7 +6,7 @@
 MTIMER_structTimerConfig_t global_structTimers[NUM_OF_TIMERS] = 
 {
     /* used for scheduler */
-    [TIMER0] = {
+    [TIMER2] = {
         .timerClkSel = TIMER_CLK_SEL_DIV_BY_8,
         .timerMode = TIMER_OVF_MODE,
         .timerIntState = TIMER_INT_ENABLE
@@ -18,7 +18,7 @@ MTIMER_structTimerConfig_t global_structTimers[NUM_OF_TIMERS] =
         .timerIntState = TIMER_INT_ENABLE
     },
     /* used for PWM */
-    [TIMER2] = {
+    [TIMER0] = {
         .timerClkSel = TIMER_CLK_SEL_DIV_BY_8,
         .timerMode = TIMER_PWM_PHASE_CORRECT_MODE,
         .timerIntState = TIMER_INT_ENABLE
