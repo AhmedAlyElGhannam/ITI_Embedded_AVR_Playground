@@ -25,10 +25,12 @@ static void MTIMER_voidTimer0Init(void)
         case TIMER_PWM_PHASE_CORRECT_MODE:
             /* set bit 3 */
             SET_BIT(local_uint8RegTemp, 3);
+            CLR_BIT(local_uint8RegTemp, 6);
         break;
 
         case TIMER_CTC_MODE:
             /* set bit 6 */
+            CLR_BIT(local_uint8RegTemp, 3);
             SET_BIT(local_uint8RegTemp, 6);
         break;
 
@@ -53,45 +55,75 @@ static void MTIMER_voidTimer0Init(void)
 
 static void MTIMER_voidTimer1Init(void)
 {
+    volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
+    volatile uint8_t local_uint8RegTemp = 0x00;
 
+    /* timer mode */
+    switch (global_structTimers[TIMER1].timerMode)
+    {
+        case TIMER_OVF_MODE:
+            
+        break;
+
+        case TIMER_PWM_PHASE_CORRECT_MODE:
+            
+        break;
+
+        case TIMER_CTC_MODE:
+           
+        break;
+
+        case TIMER_FAST_PWM_MODE:
+            
+        break;
+
+        case TIMER_ICU_MODE:
+            SET_BIT(MTIMER->TCCR1B, CAPTURE_RISING_EDGE);
+        break;
+    }
 }
 
 static void MTIMER_voidTimer2Init(void)
 {
     volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
-    volatile uint8_t local_uint8RegTemp = 0x00;
+    volatile uint8_t local_uint8TCCRTemp = 0x00;
 
     /* timer mode */
     switch (global_structTimers[TIMER2].timerMode)
     {
         case TIMER_OVF_MODE:
             /* no need to do a thing */
-            CLR_BIT(local_uint8RegTemp, 3);
-            CLR_BIT(local_uint8RegTemp, 6);
+            CLR_BIT(local_uint8TCCRTemp, 3);
+            CLR_BIT(local_uint8TCCRTemp, 6);
         break;
 
         case TIMER_PWM_PHASE_CORRECT_MODE:
-            /* set bit 3 */
-            SET_BIT(local_uint8RegTemp, 3);
+            /* set bit 3 and clear bit 6 to set mode */
+            SET_BIT(local_uint8TCCRTemp, 3);
+            CLR_BIT(local_uint8TCCRTemp, 6);
+            /* set compare out mode to non-inverting PWM */
+            SET_BIT(local_uint8TCCRTemp, 5);
+            CLR_BIT(local_uint8TCCRTemp, 4);
         break;
 
         case TIMER_CTC_MODE:
             /* set bit 6 */
-            SET_BIT(local_uint8RegTemp, 6);
+            CLR_BIT(local_uint8TCCRTemp, 3);
+            SET_BIT(local_uint8TCCRTemp, 6);
         break;
 
         case TIMER_FAST_PWM_MODE:
             /* set bit 3 & 6 */
-            SET_BIT(local_uint8RegTemp, 3);
-            SET_BIT(local_uint8RegTemp, 6);
+            SET_BIT(local_uint8TCCRTemp, 3);
+            SET_BIT(local_uint8TCCRTemp, 6);
         break;
     }
 
     /* clock selection */
-    local_uint8RegTemp |= global_structTimers[TIMER2].timerClkSel;
+    local_uint8TCCRTemp |= global_structTimers[TIMER2].timerClkSel;
 
     /* set temp value into register */
-    MTIMER->TCCR2 = local_uint8RegTemp;
+    MTIMER->TCCR2 = local_uint8TCCRTemp;
 
     /* configure interrupt based on mode of operation (NEEDS TO BE EDITED TO MAKE SURE IT IS OK) */
     // MTIMER->TIMSK = (MTIMER->TIMSK & (~11U)) |  (global_structTimers[TIMER2].timerIntState << global_structTimers[TIMER2].timerMode);
@@ -154,7 +186,7 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetClkSelection(MTIMER_enuTimers_t copy_enuTim
     MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
     volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
 
-    switch (copy_enuClkSel)
+    switch (copy_enuTimer)
     {
         case TIMER0:
             MTIMER->TCCR0 |= global_structTimers[TIMER0].timerClkSel;
@@ -203,7 +235,42 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetOutputCompareVal(MTIMER_enuTimers_t copy_en
     return ret_enuErrorStatus;
 }
 
+MTIMER_enuErrorStatus_t MTIMER_enuSetPWMDutyCycle(MTIMER_enuTimers_t copy_enuTimer, MTIMER_enuPWMDutyCycle_t copy_enuDutyCycle)
+{
+    MTIMER_enuErrorStatus_t ret_enuErrorStatus = MTIMER_OK;
+    volatile MTIMER_strRegisters_t* MTIMER = (volatile MTIMER_strRegisters_t*)MTIMER_BASE_ADDRESS;
+    uint32_t local_uint32DutyCycleCmpVal = 0;
 
+    if (copy_enuDutyCycle > PWM_DUTY_CYCLE_100)
+    {
+        ret_enuErrorStatus = MTIMER_INVALID_PARAM;
+    }
+    else 
+    {
+        switch (copy_enuTimer)
+        {
+            case TIMER0:
+                local_uint32DutyCycleCmpVal = (255UL * copy_enuDutyCycle) / 100U;
+                MTIMER->OCR0 = (uint8_t)(local_uint32DutyCycleCmpVal & 0xFF);
+            break;
+
+            case TIMER1:
+                local_uint32DutyCycleCmpVal = (65536UL * copy_enuDutyCycle) / 100;
+                // MTIMER->OCR1
+            break;
+
+            case TIMER2:
+                local_uint32DutyCycleCmpVal = (255UL * copy_enuDutyCycle) / 100;
+                MTIMER->OCR2 = (uint8_t)(local_uint32DutyCycleCmpVal & 0xFF);
+            break;
+
+            default:
+                ret_enuErrorStatus = MTIMER_INVALID_PARAM;
+        }
+    }
+
+    return ret_enuErrorStatus;
+}
 
 MTIMER_enuErrorStatus_t MTIMER_enuGetCounterVal(MTIMER_enuTimers_t copy_enuTimer, uint32_t* ptr_uint32CounterVal)
 {
@@ -252,6 +319,7 @@ static uint32_t ceil(float32_t num)
     {
         int_part += 1;
     }
+    else {}
 
     return int_part;
 }
@@ -315,7 +383,6 @@ MTIMER_enuErrorStatus_t MTIMER_enuSetTimeMs(MTIMER_enuTimers_t copy_enuTimer, ui
     
     return ret_enuErrorStatus;
 }
-
 
 MTIMER_enuErrorStatus_t MTIMER_enuSetTimerCallBack(MGIE_CallBackFunction_t ptr_ISR, MGIE_enuVectorTable_t copy_enuISRNum)
 {
