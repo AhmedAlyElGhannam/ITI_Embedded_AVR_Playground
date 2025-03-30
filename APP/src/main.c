@@ -10,6 +10,7 @@
 #include "MEXTI.h"
 #include "MTIMER.h"
 #include "HSCHEDULER.h"
+#include "MUSART.h"
 
 void timer0_callback(void);
 

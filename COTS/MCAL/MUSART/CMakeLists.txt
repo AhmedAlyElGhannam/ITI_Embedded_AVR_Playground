@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 # project name + defining used languages
-project(MDIO C) 
+project(MUSART C) 
 
 # setting default compiler for C && Cpp
 set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
@@ -27,6 +27,9 @@ include_directories(
 
 # create a static library
 add_library(${PROJECT_NAME} STATIC ${SRC_FILES} ${INC_FILES})
+
+# link with required MCAL libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE MGIE)
 
 # in order to allow main to use MDIO.h & MDIO_cfg -> make it interface
 target_include_directories(${PROJECT_NAME} INTERFACE ${PROJECT_SOURCE_DIR}/inc)

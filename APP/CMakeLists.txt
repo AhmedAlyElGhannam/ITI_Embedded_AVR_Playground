@@ -29,6 +29,7 @@ set(MCAL_LIB
 	MPORT	 
 	MEXTI
 	MTIMER
+	MUSART
 )
 
 # looping over all libs to build them
